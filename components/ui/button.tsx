@@ -4,16 +4,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium tracking-wide transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian-900 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium tracking-wide transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-silver focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian-900 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-r from-accent-blue to-accent-cyan text-obsidian-950 font-semibold shadow-glow hover:shadow-glow-strong hover:brightness-110",
+          "bg-gradient-to-r from-accent-graphite to-accent-silver text-obsidian-950 font-semibold shadow-glow hover:shadow-glow-strong hover:brightness-110",
         outline:
-          "border border-white/15 bg-white/[0.02] text-foreground hover:border-accent-cyan/60 hover:bg-white/[0.05]",
+          "border border-white/15 bg-white/[0.02] text-foreground hover:border-accent-silver/60 hover:bg-white/[0.05]",
         ghost: "text-muted-foreground hover:text-foreground hover:bg-white/[0.05]",
-        link: "text-accent-cyan underline-offset-4 hover:underline p-0 h-auto",
+        link: "text-accent-silver underline-offset-4 hover:underline p-0 h-auto",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       size: {

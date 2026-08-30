@@ -16,7 +16,7 @@ export default function AdvertiserLoginPage() {
       footer={
         <>
           Not approved yet?{" "}
-          <Link href="/register" className="text-accent-cyan hover:underline">
+          <Link href="/register" className="text-accent-silver hover:underline">
             Apply as an Advertiser
           </Link>
         </>

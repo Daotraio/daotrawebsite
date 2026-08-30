@@ -16,7 +16,7 @@ export default function PublisherRegisterPage() {
       footer={
         <>
           Already approved?{" "}
-          <Link href="/login" className="text-accent-cyan hover:underline">
+          <Link href="/login" className="text-accent-silver hover:underline">
             Log in
           </Link>
         </>

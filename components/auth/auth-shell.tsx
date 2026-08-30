@@ -19,7 +19,7 @@ export function AuthShell({
 
       <div className="relative w-full max-w-md px-4">
         <Link href="/" className="mb-8 flex items-center justify-center gap-2">
-          <Orbit className="h-6 w-6 text-accent-cyan" />
+          <Orbit className="h-6 w-6 text-accent-silver" />
           <span className="font-display text-lg font-semibold tracking-tight">Daotra</span>
         </Link>
 

@@ -49,9 +49,9 @@ export function PortalRegisterForm({ role }: { role: "publisher" | "advertiser" 
 
   if (status === "success") {
     return (
-      <p role="status" className="flex items-center gap-2 text-sm text-accent-cyan">
+      <p role="status" className="flex items-center gap-2 text-sm text-accent-silver">
         <CheckCircle2 className="h-4 w-4 shrink-0" />
-        Application received — we&rsquo;ll review it and email you within 24–48 hours with next
+        Application received - we&rsquo;ll review it and email you within 24–48 hours with next
         steps, including how to set your password.
       </p>
     );
@@ -104,14 +104,14 @@ export function PortalRegisterForm({ role }: { role: "publisher" | "advertiser" 
 
       <div>
         <label className="flex items-start gap-2 text-sm text-muted-foreground">
-          <input type="checkbox" className="mt-0.5 accent-accent-cyan" {...register("agreeToTerms")} />
+          <input type="checkbox" className="mt-0.5 accent-accent-silver" {...register("agreeToTerms")} />
           <span>
             I agree to the{" "}
-            <a href="https://daotra.io/terms" target="_blank" rel="noopener noreferrer" className="text-accent-cyan hover:underline">
+            <a href="https://daotra.io/terms" target="_blank" rel="noopener noreferrer" className="text-accent-silver hover:underline">
               Terms &amp; Conditions
             </a>{" "}
             and{" "}
-            <a href="https://daotra.io/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-cyan hover:underline">
+            <a href="https://daotra.io/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-silver hover:underline">
               Privacy Policy
             </a>
             .

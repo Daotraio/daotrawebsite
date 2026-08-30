@@ -22,7 +22,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] bg-obsidian-900/70 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex shrink-0 items-center gap-2 group" aria-label="Daotra home">
-          <Orbit className="h-6 w-6 text-accent-cyan transition-transform duration-500 group-hover:rotate-90" />
+          <Orbit className="h-6 w-6 text-accent-silver transition-transform duration-500 group-hover:rotate-90" />
           <span className="font-display text-lg font-semibold tracking-tight text-foreground">
             Daotra
           </span>
@@ -35,7 +35,7 @@ export function SiteHeader() {
               href={link.href}
               className={cn(
                 "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-                pathname === link.href && "text-accent-cyan"
+                pathname === link.href && "text-accent-silver"
               )}
             >
               {link.label}

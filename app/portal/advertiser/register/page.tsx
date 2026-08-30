@@ -12,11 +12,11 @@ export default function AdvertiserRegisterPage() {
   return (
     <AuthShell
       title="Apply as an advertiser"
-      description="Takes about a minute. We'll review — including licensing where relevant — and follow up by email."
+      description="Takes about a minute. We'll review - including licensing where relevant - and follow up by email."
       footer={
         <>
           Already approved?{" "}
-          <Link href="/login" className="text-accent-cyan hover:underline">
+          <Link href="/login" className="text-accent-silver hover:underline">
             Log in
           </Link>
         </>

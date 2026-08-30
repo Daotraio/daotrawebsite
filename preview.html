@@ -13,8 +13,8 @@
       extend: {
         colors: {
           obsidian: { 950: '#000000', 900: '#000000', 800: '#0B0B0C', 700: '#141416', 600: '#1C1C1F' },
-          accentBlue: '#0066FF',
-          accentCyan: '#00F0FF',
+          accentBlue: '#86868B',
+          accentCyan: '#F5F5F7',
         },
         fontFamily: {
           display: ['"Space Grotesk"', 'sans-serif'],
@@ -29,17 +29,17 @@
   body { background-color: #000000; }
   .bg-grid {
     background-image:
-      linear-gradient(rgba(0,240,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,240,255,0.04) 1px, transparent 1px);
+      linear-gradient(rgba(245, 245, 247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245, 245, 247,0.04) 1px, transparent 1px);
     background-size: 44px 44px;
   }
   .bg-radial-fade {
-    background: radial-gradient(55% 45% at 50% -10%, rgba(0,102,255,0.10) 0%, rgba(0,0,0,0) 70%);
+    background: radial-gradient(55% 45% at 50% -10%, rgba(134, 134, 139,0.10) 0%, rgba(0,0,0,0) 70%);
   }
   .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.10); }
   #globe-canvas { touch-action: none; cursor: grab; }
   #globe-canvas:active { cursor: grabbing; }
-  ::selection { background: rgba(0,240,255,0.25); }
+  ::selection { background: rgba(245, 245, 247,0.25); }
   .marquee-track { will-change: transform; }
 </style>
 </head>
@@ -92,8 +92,8 @@
       <div>
         <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accentCyan">International Performance Marketing Network</p>
         <h1 class="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-          <span class="block" style="color:#0066FF">One network</span>
-          <span class="block" style="color:#00F0FF">All traffic sources</span>
+          <span class="block" style="color:#86868B">One network</span>
+          <span class="block" style="color:#F5F5F7">All traffic sources</span>
         </h1>
         <p class="mt-6 max-w-xl text-lg text-slate-400">
           Daotra connects publishers and advertisers across
@@ -323,10 +323,10 @@
   scene.add(globeGroup);
 
   const sphereGeo = new THREE.SphereGeometry(2, 48, 48);
-  const sphereMat = new THREE.MeshPhongMaterial({ color: 0x000000, emissive: 0x0066FF, emissiveIntensity: 0.07, shininess: 12 });
+  const sphereMat = new THREE.MeshPhongMaterial({ color: 0x000000, emissive: 0x86868B, emissiveIntensity: 0.07, shininess: 12 });
   globeGroup.add(new THREE.Mesh(sphereGeo, sphereMat));
 
-  const graticuleMat = new THREE.LineBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.12 });
+  const graticuleMat = new THREE.LineBasicMaterial({ color: 0xF5F5F7, transparent: true, opacity: 0.12 });
   for (let i = 0; i <= 12; i++) {
     const lng = (i / 12) * Math.PI * 2;
     const pts = [];
@@ -347,7 +347,7 @@
   }
 
   const atmoGeo = new THREE.SphereGeometry(2.22, 48, 48);
-  const atmoMat = new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.06, side: THREE.BackSide });
+  const atmoMat = new THREE.MeshBasicMaterial({ color: 0xF5F5F7, transparent: true, opacity: 0.06, side: THREE.BackSide });
   globeGroup.add(new THREE.Mesh(atmoGeo, atmoMat));
 
   function latLngToVec3(lat, lng, r) {
@@ -356,7 +356,7 @@
     return new THREE.Vector3(-r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
   }
 
-  const markerColor = (tier) => tier === 'primary' ? 0x00F0FF : tier === 'growth' ? 0x0066FF : 0x7C5CFF;
+  const markerColor = (tier) => tier === 'primary' ? 0xF5F5F7 : tier === 'growth' ? 0x86868B : 0xC7C7CC;
 
   // Three.js core has no built-in text renderer, so each GEO label is baked
   // into a small canvas texture and shown as a Sprite - sprites always face

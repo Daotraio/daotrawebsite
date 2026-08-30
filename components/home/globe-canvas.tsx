@@ -2,6 +2,10 @@
 
 import * as React from "react";
 import * as THREE from "three";
+import { feature } from "topojson-client";
+import type { Topology, GeometryCollection } from "topojson-specification";
+import type { Feature, Geometry } from "geojson";
+import worldTopology from "world-atlas/countries-110m.json";
 import { markerColor, type GeoOfferCountry } from "@/lib/geo-offers";
 
 interface GlobeCanvasProps {
@@ -15,11 +19,29 @@ interface GlobeCanvasProps {
 // inside useEffect (client-only) and type the instance loosely.
 type GlobeInstance = any;
 
+// world-atlas ships a handful of names that don't match our dataset's
+// (shorter, more colloquial) country names verbatim - alias just those, so a
+// polygon click can look up the matching dataset entry by name.
+const COUNTRY_NAME_ALIASES: Record<string, string> = {
+  "United States of America": "United States",
+};
+
+// Land/country polygons for the "continents and countries must be clearly
+// visible" requirement - bundled from the world-atlas npm package (not
+// fetched at runtime) so this works offline and needs no connect-src CSP
+// exception. Computed once at module load, not per-mount.
+const worldCountryFeatures = feature(
+  worldTopology as unknown as Topology,
+  (worldTopology as unknown as Topology).objects.countries as GeometryCollection
+).features as Feature<Geometry, { name: string }>[];
+
 export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeCanvasProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const globeRef = React.useRef<GlobeInstance>(null);
   const onSelectRef = React.useRef(onSelect);
   onSelectRef.current = onSelect;
+  const countriesRef = React.useRef(countries);
+  countriesRef.current = countries;
   const [ready, setReady] = React.useState(false);
 
   // One-time init: builds the globe instance itself. Data is applied
@@ -43,9 +65,27 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
         .backgroundColor("rgba(0,0,0,0)")
         .showGlobe(true)
         .showAtmosphere(true)
-        .atmosphereColor("#00F0FF")
+        .atmosphereColor("#F5F5F7")
         .atmosphereAltitude(0.18)
-        .showGraticules(true)
+        .showGraticules(false)
+        // Country/continent landmasses - the primary "which countries are
+        // covered" wayfinding layer, drawn as flat-shaded silhouettes rather
+        // than a photo texture so it stays a stylized data globe, not a
+        // stock-earth image.
+        .polygonsData(worldCountryFeatures)
+        .polygonCapColor(() => "rgba(255,255,255,0.14)")
+        .polygonSideColor(() => "rgba(255,255,255,0.03)")
+        .polygonStrokeColor(() => "rgba(255,255,255,0.35)")
+        .polygonAltitude(0.005)
+        .onPolygonClick((f: Feature<Geometry, { name: string }>) => {
+          const worldName = f.properties?.name;
+          const datasetName = worldName ? (COUNTRY_NAME_ALIASES[worldName] ?? worldName) : undefined;
+          const match = countriesRef.current.find((c) => c.name === datasetName);
+          if (match) {
+            world.controls().autoRotate = false;
+            onSelectRef.current(match);
+          }
+        })
         .pointLat((d: GeoOfferCountry) => d.lat)
         .pointLng((d: GeoOfferCountry) => d.lng)
         .pointColor((d: GeoOfferCountry) => markerColor(d))
@@ -54,7 +94,7 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
         .pointLabel(
           (d: GeoOfferCountry) =>
             `<div style="font-family:var(--font-sans,sans-serif);font-size:12px;line-height:1.4">
-               <strong>${d.name}</strong> | ${d.activeOffers} active offers
+               <strong>${d.name}</strong> | ${d.activeOffers} active deals
              </div>`
         )
         // Persistent text labels physically rendered at each node (distinct
@@ -72,7 +112,7 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
         .labelAltitude(0.014)
         .ringLat((d: GeoOfferCountry) => d.lat)
         .ringLng((d: GeoOfferCountry) => d.lng)
-        .ringColor(() => (t: number) => `rgba(0,240,255,${1 - t})`)
+        .ringColor(() => (t: number) => `rgba(245,245,247,${1 - t})`)
         .ringMaxRadius(3.2)
         .ringPropagationSpeed(1.6)
         .ringRepeatPeriod(2200)
@@ -87,8 +127,8 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
       // not a stock earth, and it matches the site's true-black theme.
       const globeMaterial = world.globeMaterial() as THREE.MeshPhongMaterial;
       globeMaterial.color = new THREE.Color("#000000");
-      globeMaterial.emissive = new THREE.Color("#0066FF");
-      globeMaterial.emissiveIntensity = 0.07;
+      globeMaterial.emissive = new THREE.Color("#8E8E93");
+      globeMaterial.emissiveIntensity = 0.05;
       globeMaterial.shininess = 12;
 
       const controls = world.controls();
@@ -147,7 +187,7 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
       <div ref={containerRef} className="h-full w-full" aria-hidden={!ready} />
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-40 w-40 animate-pulse-slow rounded-full border border-accent-cyan/20 bg-accent-cyan/5" />
+          <div className="h-40 w-40 animate-pulse-slow rounded-full border border-accent-silver/20 bg-accent-silver/5" />
         </div>
       )}
     </div>

@@ -50,7 +50,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2">
-              <Orbit className="h-6 w-6 text-accent-cyan" />
+              <Orbit className="h-6 w-6 text-accent-silver" />
               <span className="font-display text-lg font-semibold tracking-tight">Daotra</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
@@ -65,7 +65,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-muted-foreground transition-colors hover:border-accent-cyan/40 hover:text-accent-cyan"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-muted-foreground transition-colors hover:border-accent-silver/40 hover:text-accent-silver"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -82,7 +82,7 @@ export function SiteFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-accent-cyan"
+                      className="text-sm text-muted-foreground transition-colors hover:text-accent-silver"
                       {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     >
                       {link.label}

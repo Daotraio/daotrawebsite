@@ -13,7 +13,7 @@ export const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttribute
 Label.displayName = "Label";
 
 const fieldClasses =
-  "w-full rounded-md border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan disabled:opacity-50";
+  "w-full rounded-md border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:border-accent-silver focus:ring-1 focus:ring-accent-silver disabled:opacity-50";
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (

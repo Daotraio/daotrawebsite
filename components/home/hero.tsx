@@ -1,6 +1,5 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Eyebrow } from "@/components/ui/card";
 import { InteractiveGlobe } from "@/components/home/interactive-globe";
 
 // Color-coded via CSS custom properties (set in globals.css: --hero-accent-a /
@@ -14,8 +13,7 @@ export function Hero() {
 
       <div className="container relative grid gap-12 pt-28 pb-16 lg:grid-cols-2 lg:items-center lg:pt-32">
         <div className="animate-fade-up">
-          <Eyebrow>International Performance Marketing Network</Eyebrow>
-          <h1 className="mt-4 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
             <span className="block" style={{ color: "var(--hero-accent-a)" }}>
               One network
             </span>
@@ -24,19 +22,19 @@ export function Hero() {
             </span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Daotra connects publishers and advertisers across{" "}
-            <a href="#igaming" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-accent-cyan">
+            Daotra is the affiliate network connecting publishers and advertisers across{" "}
+            <a href="#igaming" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-accent-silver">
               iGaming
             </a>
             ,{" "}
-            <a href="#prediction-markets" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-accent-cyan">
+            <a href="#prediction-markets" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-accent-silver">
               Prediction Markets
             </a>
             , and{" "}
-            <a href="#tech-verticals" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-accent-cyan">
+            <a href="#tech-verticals" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-accent-silver">
               Tech Verticals
             </a>{" "}
-            — with live coverage in 100s of markets and counting.
+            - with live coverage in 100s of markets and counting.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">

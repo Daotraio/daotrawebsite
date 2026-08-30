@@ -39,7 +39,7 @@ export function CookieBanner() {
         <p className="max-w-2xl text-sm text-muted-foreground">
           We use strictly necessary cookies to run this site, and optional analytics cookies to
           understand usage. See our{" "}
-          <Link href="/privacy#cookies" className="text-accent-cyan hover:underline">
+          <Link href="/privacy" className="text-accent-silver hover:underline">
             Privacy Policy
           </Link>{" "}
           for details.

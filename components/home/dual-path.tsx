@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Eyebrow } from "@/components/ui/card";
 
 const PUBLISHER_POINTS = [
-  "Weekly and Net-15 payment terms, in 12+ currencies",
-  "Direct offers across all four verticals, no sub-affiliation markups",
+  "Monthly, Bi-Monthly and Weekly payments.",
+  "Direct offers",
   "Real-time reporting down to sub-ID and click level",
   "A dedicated affiliate manager from day one",
 ];
@@ -29,7 +29,7 @@ export function DualPath() {
           <ul className="mt-6 space-y-3">
             {PUBLISHER_POINTS.map((p) => (
               <li key={p} className="flex items-start gap-3 text-sm text-muted-foreground">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-cyan" />
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-silver" />
                 {p}
               </li>
             ))}
@@ -49,7 +49,7 @@ export function DualPath() {
           <ul className="mt-6 space-y-3">
             {ADVERTISER_POINTS.map((p) => (
               <li key={p} className="flex items-start gap-3 text-sm text-muted-foreground">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-cyan" />
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-silver" />
                 {p}
               </li>
             ))}

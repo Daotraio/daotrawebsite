@@ -19,7 +19,7 @@ const VERTICALS: {
       "Daotra routes publisher traffic to licensed sportsbooks and casinos, with deal structures and compliance tooling built for a regulated vertical from the ground up.",
     services: [
       "Real-time postbacks on Daotra's platform",
-      "Real-time deposit and bet-event tracking",
+      "Dedicated Sweepstakes casino and promotions coverage alongside real-money offers",
       "Regional licensing and compliance overlays per market",
       "CPA, RevShare, and Hybrid deal structuring",
       "Responsible-gambling signal passthrough to operators",
@@ -37,7 +37,6 @@ const VERTICALS: {
       "Contract-settlement conversion tracking",
       "Early-mover access as new markets go live",
       "Cross-platform attribution for multi-touch journeys",
-      "Volume-based payout tiers",
     ],
   },
   {
@@ -46,7 +45,7 @@ const VERTICALS: {
     name: "Tech Verticals",
     tagline: "VPN, SaaS & performance tech",
     description:
-      "Consumer privacy tools, fintech, and utility apps that convert on measurable actions — trials, installs, and subscriptions — with tooling built to bundle offers across categories under one payout relationship.",
+      "Consumer privacy tools, fintech, and utility apps that convert on measurable actions - trials, installs, and subscriptions - with tooling built to bundle offers across categories under one payout relationship.",
     servicesLabel: "Platform capabilities",
     services: [
       "Trial-to-paid funnel tracking",
@@ -74,8 +73,8 @@ export function VerticalSections() {
               className="scroll-mt-24 grid gap-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 lg:grid-cols-[1fr_1.1fr] lg:p-10"
             >
               <div>
-                <v.icon className="h-9 w-9 text-accent-cyan" strokeWidth={1.5} />
-                <p className="mt-4 font-mono text-xs uppercase tracking-widest text-accent-cyan">
+                <v.icon className="h-9 w-9 text-accent-silver" strokeWidth={1.5} />
+                <p className="mt-4 font-mono text-xs uppercase tracking-widest text-accent-silver">
                   {v.tagline}
                 </p>
                 <h3 className="mt-2 font-display text-2xl font-semibold text-foreground">
@@ -92,7 +91,7 @@ export function VerticalSections() {
                 <ul className="mt-3 space-y-3">
                   {v.services.map((s) => (
                     <li key={s} className="flex items-start gap-3 text-sm text-muted-foreground">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-cyan" />
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-silver" />
                       {s}
                     </li>
                   ))}

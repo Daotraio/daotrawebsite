@@ -39,8 +39,15 @@ export async function POST(req: NextRequest) {
   // provider of choice here (e.g. Resend, SendGrid, or a CRM webhook) using
   // an API key from process.env. Keeping delivery out of this repo avoids
   // hardcoding a vendor choice or a secret that isn't actually configured.
-  const { name, email, company, inquiryType, message } = parsed.data;
-  console.info("[contact] new inquiry", { name, email, company, inquiryType, messageLength: message.length });
+  const { name, email, company, telegram, inquiryType, message } = parsed.data;
+  console.info("[contact] new inquiry", {
+    name,
+    email,
+    company,
+    telegram: `@${telegram}`,
+    inquiryType,
+    messageLength: message.length,
+  });
 
   return NextResponse.json({ ok: true });
 }

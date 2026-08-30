@@ -32,9 +32,9 @@ export const geoOffers = geoOffersRaw as GeoOffersDataset;
 // a supporting hue for Tech Verticals, so the globe stays legible when a
 // market spans more than one.
 export const VERTICAL_COLORS: Record<Vertical, string> = {
-  iGaming: "#00F0FF",
-  "Prediction Markets": "#0066FF",
-  "Tech Verticals": "#7C5CFF",
+  iGaming: "#F5F5F7",
+  "Prediction Markets": "#C7C7CC",
+  "Tech Verticals": "#86868B",
 };
 
 export function dominantVertical(country: GeoOfferCountry): Vertical {

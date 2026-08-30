@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { contactFormSchema, type ContactFormValues } from "@/lib/validation/contact";
 import { Label, Input, Textarea, Select } from "@/components/ui/form-fields";
+import { TelegramInput } from "@/components/ui/telegram-input";
 import { Button } from "@/components/ui/button";
 
 export function ContactForm() {
@@ -16,7 +17,7 @@ export function ContactForm() {
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
-    defaultValues: { inquiryType: "general", company: "", website: "" },
+    defaultValues: { inquiryType: "general", company: "", telegram: "", website: "" },
   });
 
   const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
@@ -88,6 +89,12 @@ export function ContactForm() {
       </div>
 
       <div>
+        <Label htmlFor="telegram">Telegram username</Label>
+        <TelegramInput id="telegram" {...register("telegram")} />
+        {errors.telegram && <p className="mt-1.5 text-xs text-destructive">{errors.telegram.message}</p>}
+      </div>
+
+      <div>
         <Label htmlFor="message">Message</Label>
         <Textarea id="message" rows={5} placeholder="Tell us about your traffic, offers, or question…" {...register("message")} />
         {errors.message && <p className="mt-1.5 text-xs text-destructive">{errors.message.message}</p>}
@@ -99,8 +106,8 @@ export function ContactForm() {
       </Button>
 
       {status === "success" && (
-        <p className="flex items-center gap-2 text-sm text-accent-cyan">
-          <CheckCircle2 className="h-4 w-4" /> Message sent — we&apos;ll reply within one business day.
+        <p className="flex items-center gap-2 text-sm text-accent-silver">
+          <CheckCircle2 className="h-4 w-4" /> Message sent - we&apos;ll reply within hours.
         </p>
       )}
       {status === "error" && (

@@ -23,9 +23,12 @@ const config: Config = {
           700: "#141416",
           600: "#1C1C1F",
         },
+        // Monochrome accent system: no blue anywhere in the palette. silver
+        // is the bright highlight (was cyan), graphite the muted secondary
+        // (was blue) - both grayscale, tuned for a true-black canvas.
         accent: {
-          blue: "#0066FF",
-          cyan: "#00F0FF",
+          graphite: "#86868B",
+          silver: "#F5F5F7",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -54,15 +57,18 @@ const config: Config = {
         },
       },
       fontFamily: {
+        // A single humanist sans (Inter) for both text and display sizes -
+        // one neutral typeface at varying weight/tracking, Apple-style,
+        // rather than pairing in a separate geometric display face.
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        display: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       backgroundImage: {
         "grid-faint":
-          "linear-gradient(rgba(0,240,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.06) 1px, transparent 1px)",
+          "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
         "radial-fade":
-          "radial-gradient(60% 60% at 50% 0%, rgba(0,102,255,0.18) 0%, rgba(11,15,23,0) 70%)",
+          "radial-gradient(60% 60% at 50% 0%, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0) 70%)",
       },
       backgroundSize: {
         grid: "40px 40px",
@@ -73,8 +79,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        glow: "0 0 40px rgba(0, 240, 255, 0.15)",
-        "glow-strong": "0 0 80px rgba(0, 102, 255, 0.35)",
+        glow: "0 0 40px rgba(255, 255, 255, 0.12)",
+        "glow-strong": "0 0 80px rgba(255, 255, 255, 0.22)",
       },
       keyframes: {
         "fade-up": {

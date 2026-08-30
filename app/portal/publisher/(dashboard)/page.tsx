@@ -21,9 +21,9 @@ export default function PublisherOverviewPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardCard title="Clicks" value="—" hint="Connects to live tracking" />
-        <DashboardCard title="Conversions" value="—" hint="Connects to live tracking" />
-        <DashboardCard title="Earnings" value="—" hint="Connects to live tracking" />
+        <DashboardCard title="Clicks" value="-" hint="Connects to live tracking" />
+        <DashboardCard title="Conversions" value="-" hint="Connects to live tracking" />
+        <DashboardCard title="Earnings" value="-" hint="Connects to live tracking" />
         <DashboardCard title="Active offers" value="0" hint="Browse the offer catalog" />
       </div>
 

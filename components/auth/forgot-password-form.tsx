@@ -18,7 +18,7 @@ export function ForgotPasswordForm() {
         Password reset delivery isn&rsquo;t wired up yet in this build.
       </p>
       <p className="text-center text-sm text-muted-foreground">
-        <Link href="/login" className="text-accent-cyan hover:underline">
+        <Link href="/login" className="text-accent-silver hover:underline">
           Back to log in
         </Link>
       </p>

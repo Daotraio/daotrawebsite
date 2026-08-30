@@ -9,7 +9,7 @@ export const TelegramInput = React.forwardRef<
     <div
       className={cn(
         "flex items-center rounded-md border border-white/15 bg-white/[0.03] pl-4 transition-colors",
-        "focus-within:border-accent-cyan focus-within:ring-1 focus-within:ring-accent-cyan"
+        "focus-within:border-accent-silver focus-within:ring-1 focus-within:ring-accent-silver"
       )}
     >
       <span aria-hidden="true" className="select-none text-sm text-muted-foreground">

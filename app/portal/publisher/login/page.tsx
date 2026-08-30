@@ -16,7 +16,7 @@ export default function PublisherLoginPage() {
       footer={
         <>
           Not approved yet?{" "}
-          <Link href="/register" className="text-accent-cyan hover:underline">
+          <Link href="/register" className="text-accent-silver hover:underline">
             Apply as a Publisher
           </Link>
         </>

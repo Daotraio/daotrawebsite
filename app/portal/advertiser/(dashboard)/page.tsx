@@ -14,9 +14,9 @@ export default function AdvertiserOverviewPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardCard title="Spend" value="—" hint="Connects to live tracking" />
-        <DashboardCard title="Conversions" value="—" hint="Connects to live tracking" />
-        <DashboardCard title="Avg. CPA" value="—" hint="Connects to live tracking" />
+        <DashboardCard title="Spend" value="-" hint="Connects to live tracking" />
+        <DashboardCard title="Conversions" value="-" hint="Connects to live tracking" />
+        <DashboardCard title="Avg. CPA" value="-" hint="Connects to live tracking" />
         <DashboardCard title="Active campaigns" value="0" hint="Launch your first campaign" />
       </div>
 

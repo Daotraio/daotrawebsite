@@ -14,7 +14,7 @@ const GlobeCanvas = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-full w-full items-center justify-center">
-        <div className="h-40 w-40 animate-pulse-slow rounded-full border border-accent-cyan/20 bg-accent-cyan/5" />
+        <div className="h-40 w-40 animate-pulse-slow rounded-full border border-accent-silver/20 bg-accent-silver/5" />
       </div>
     ),
   }
@@ -31,7 +31,7 @@ export function InteractiveGlobe() {
   };
 
   return (
-    <div className="relative h-[480px] w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-obsidian-950/60 sm:h-[560px] lg:h-[640px]">
+    <div className="relative h-[480px] w-full overflow-hidden sm:h-[560px] lg:h-[640px]">
       <GlobeCanvas
         countries={dataset.countries}
         onSelect={handleSelect}

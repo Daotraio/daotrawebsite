@@ -1,12 +1,6 @@
 import { X } from "lucide-react";
 import type { GeoOfferCountry, GeoOffersDataset } from "@/lib/geo-offers";
-import { VERTICAL_COLORS, networkTotals } from "@/lib/geo-offers";
-
-const TIER_LABEL: Record<GeoOfferCountry["tier"], string> = {
-  primary: "Primary market",
-  growth: "Growth market",
-  emerging: "Emerging market",
-};
+import { networkTotals } from "@/lib/geo-offers";
 
 export function GlobeInfoContent({
   dataset,
@@ -21,16 +15,15 @@ export function GlobeInfoContent({
     const totals = networkTotals(dataset);
     return (
       <div className="space-y-4">
-        <p className="font-mono text-xs uppercase tracking-widest text-accent-cyan">
+        <p className="font-mono text-xs uppercase tracking-widest text-accent-silver">
           Live network coverage
         </p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Stat label="GEOs" value={totals.totalGeos.toString()} />
-          <Stat label="Active offers" value={`${totals.totalOffers}+`} />
-          <Stat label="Verticals" value={dataset.verticals.length.toString()} />
+          <Stat label="Active deals" value={`${totals.totalOffers}+`} />
         </div>
         <p className="text-sm text-muted-foreground">
-          Tap any marker to see offer coverage and verticals live for that market.
+          Tap any market or country to see active deal coverage for that region.
         </p>
       </div>
     );
@@ -39,12 +32,7 @@ export function GlobeInfoContent({
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between">
-        <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-accent-cyan">
-            {TIER_LABEL[country.tier]}
-          </p>
-          <h3 className="font-display text-xl font-semibold text-foreground">{country.name}</h3>
-        </div>
+        <h3 className="font-display text-xl font-semibold text-foreground">{country.name}</h3>
         <button
           onClick={onClose}
           aria-label="Close market details"
@@ -54,25 +42,7 @@ export function GlobeInfoContent({
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Stat label="Active offers" value={country.activeOffers.toString()} />
-        <Stat label="Region" value={country.region} />
-      </div>
-
-      <div>
-        <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Verticals</p>
-        <div className="flex flex-wrap gap-2">
-          {country.verticals.map((v) => (
-            <span
-              key={v}
-              className="rounded-full border border-white/10 px-3 py-1 text-xs font-medium"
-              style={{ color: VERTICAL_COLORS[v] }}
-            >
-              {v}
-            </span>
-          ))}
-        </div>
-      </div>
+      <Stat label="Active deals" value={country.activeOffers.toString()} />
     </div>
   );
 }

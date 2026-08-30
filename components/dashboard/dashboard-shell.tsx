@@ -37,7 +37,7 @@ export function DashboardShell({
             onClick={() => setMobileOpen(false)}
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/[0.05] hover:text-foreground",
-              active && "bg-white/[0.06] text-accent-cyan"
+              active && "bg-white/[0.06] text-accent-silver"
             )}
           >
             <item.icon className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function DashboardShell({
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-white/[0.06] bg-obsidian-950 py-6 md:flex">
         <Link href="https://daotra.io" className="mb-8 flex items-center gap-2 px-6">
-          <Orbit className="h-6 w-6 text-accent-cyan" />
+          <Orbit className="h-6 w-6 text-accent-silver" />
           <span className="font-display text-lg font-semibold tracking-tight">Daotra</span>
         </Link>
         {nav}
@@ -85,7 +85,7 @@ export function DashboardShell({
             <span className="hidden text-sm text-muted-foreground sm:inline">
               {session?.user?.email ?? "Not signed in"}
             </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-accent-blue to-accent-cyan text-sm font-semibold text-obsidian-950">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-accent-graphite to-accent-silver text-sm font-semibold text-obsidian-950">
               {(session?.user?.name ?? "?").charAt(0).toUpperCase()}
             </div>
           </div>
