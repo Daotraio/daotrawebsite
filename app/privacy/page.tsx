@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/page-hero";
 import { LegalSection } from "@/components/legal/legal-section";
+import { robotsMeta } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "How Daotra collects, uses, and protects personal data on its affiliate network.",
-  robots: { index: true, follow: true },
+  robots: robotsMeta,
 };
 
 const LAST_UPDATED = "August 30, 2026";

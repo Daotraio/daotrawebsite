@@ -15,8 +15,12 @@
     "staging": {
       "name": "daotra-staging",
       // No custom domain needed - this alone gives you a free, shareable
-      // https://daotra-staging.<your-subdomain>.workers.dev URL.
+      // https://daotra-staging.<your-subdomain>.workers.dev URL. Note this
+      // URL has no access control - anyone with the link sees the same
+      // site you do. APP_ENV=staging keeps it out of search results
+      // (see lib/seo.ts), but doesn't restrict who can open the link.
       "workers_dev": true,
+      "vars": { "APP_ENV": "staging" },
       "assets": {
         "directory": ".open-next/assets",
         "binding": "ASSETS"
@@ -27,6 +31,7 @@
       // workers_dev is left off here on purpose - production is reached
       // only via the real Custom Domains (daotra.io, aff., adv.) added in
       // the Cloudflare dashboard, not a workers.dev URL.
+      "vars": { "APP_ENV": "production" },
       "assets": {
         "directory": ".open-next/assets",
         "binding": "ASSETS"

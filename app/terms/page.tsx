@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/page-hero";
 import { LegalSection } from "@/components/legal/legal-section";
+import { robotsMeta } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: "The terms governing use of the Daotra affiliate network by publishers and advertisers.",
-  robots: { index: true, follow: true },
+  robots: robotsMeta,
 };
 
 const LAST_UPDATED = "August 30, 2026";

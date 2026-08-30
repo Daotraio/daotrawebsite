@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { CookieBanner } from "@/components/consent/cookie-banner";
+import { robotsMeta } from "@/lib/seo";
 
 // One humanist sans for both text and display sizes (Apple-style single
 // typeface, varied by weight/tracking) rather than pairing with a separate
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
     "high-intent traffic",
     "publisher network",
   ],
-  robots: { index: true, follow: true },
+  robots: robotsMeta,
   openGraph: {
     type: "website",
     siteName: "Daotra",
