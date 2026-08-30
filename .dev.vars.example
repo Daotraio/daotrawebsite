@@ -1,0 +1,12 @@
+# Copy to .dev.vars for local `wrangler dev` / `next dev` runs.
+# In production, set the same keys with: npx wrangler secret put VAR_NAME
+# (never commit real values of this file - .dev.vars is gitignored)
+
+NEXTAUTH_SECRET=replace-with-a-32-byte-random-string
+DATABASE_URL=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+EMAIL_FROM=no-reply@daotra.io
+RESEND_API_KEY=

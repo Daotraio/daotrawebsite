@@ -1,0 +1,53 @@
+name: Deploy to Cloudflare Workers
+
+# Two-environment model: push to `staging` deploys to the free
+# daotra-staging.workers.dev URL for trying changes before they're real;
+# push to `main` deploys to production (daotra.io + aff./adv. subdomains).
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      # Builds the Next.js app and transforms it into a Cloudflare Worker via
+      # OpenNext. Runs on every push and pull request; pull requests only
+      # build (no deploy token needed) so CI still catches build breaks on
+      # branches before they're merged.
+      - name: Build
+        run: npx opennextjs-cloudflare build
+
+      - name: Deploy to staging
+        if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env=staging
+
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env=production

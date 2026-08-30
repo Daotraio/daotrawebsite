@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daotra — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          obsidian: { 950: '#000000', 900: '#000000', 800: '#0B0B0C', 700: '#141416', 600: '#1C1C1F' },
+          accentBlue: '#0066FF',
+          accentCyan: '#00F0FF',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          sans: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  body { background-color: #000000; }
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(0,240,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .bg-radial-fade {
+    background: radial-gradient(55% 45% at 50% -10%, rgba(0,102,255,0.10) 0%, rgba(0,0,0,0) 70%);
+  }
+  .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.10); }
+  #globe-canvas { touch-action: none; cursor: grab; }
+  #globe-canvas:active { cursor: grabbing; }
+  ::selection { background: rgba(0,240,255,0.25); }
+  .marquee-track { will-change: transform; }
+</style>
+</head>
+<body class="text-slate-100 font-sans antialiased">
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-50 w-full border-b border-white/[0.06] bg-black/70 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto flex h-16 items-center justify-between px-6 gap-4">
+      <a href="#" class="flex items-center gap-2 shrink-0">
+        <svg class="h-6 w-6 text-accentCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/></svg>
+        <span class="font-display text-lg font-semibold tracking-tight">Daotra</span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-400">
+        <a href="#" class="hover:text-white">About</a>
+        <a href="#" class="hover:text-white">Publishers</a>
+        <a href="#" class="hover:text-white">Advertisers</a>
+        <a href="#" class="hover:text-white">Contact Us</a>
+      </nav>
+      <!-- Direct action buttons - no dropdown/box, no raw URLs shown -->
+      <div class="hidden lg:flex items-center gap-1.5">
+        <a href="https://aff.daotra.io/login" class="text-sm font-medium text-slate-400 hover:text-white px-3 py-2 rounded-md">Publisher Login</a>
+        <a href="https://adv.daotra.io/login" class="text-sm font-medium text-slate-400 hover:text-white px-3 py-2 rounded-md">Advertiser Login</a>
+        <span class="mx-1 h-5 w-px bg-white/10"></span>
+        <a href="https://aff.daotra.io/register" class="text-sm font-semibold text-obsidian-950 bg-gradient-to-r from-accentBlue to-accentCyan rounded-md px-4 py-2">Publisher Register</a>
+        <a href="https://adv.daotra.io/register" class="text-sm font-semibold text-obsidian-950 bg-gradient-to-r from-accentBlue to-accentCyan rounded-md px-4 py-2">Advertiser Register</a>
+      </div>
+      <button class="lg:hidden h-11 w-11 flex items-center justify-center text-white" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-white/[0.06] bg-black/95 backdrop-blur-xl px-6 py-4 space-y-1">
+      <a href="#" class="block rounded-md px-3 py-3 text-sm font-medium text-slate-400 hover:bg-white/[0.05] hover:text-white">About</a>
+      <a href="#" class="block rounded-md px-3 py-3 text-sm font-medium text-slate-400 hover:bg-white/[0.05] hover:text-white">Publishers</a>
+      <a href="#" class="block rounded-md px-3 py-3 text-sm font-medium text-slate-400 hover:bg-white/[0.05] hover:text-white">Advertisers</a>
+      <a href="#" class="block rounded-md px-3 py-3 text-sm font-medium text-slate-400 hover:bg-white/[0.05] hover:text-white">Contact Us</a>
+      <div class="grid grid-cols-2 gap-2 pt-3 mt-2 border-t border-white/[0.06]">
+        <a href="https://aff.daotra.io/login" class="text-center rounded-md border border-white/15 px-3 py-2.5 text-sm font-medium">Publisher Login</a>
+        <a href="https://adv.daotra.io/login" class="text-center rounded-md border border-white/15 px-3 py-2.5 text-sm font-medium">Advertiser Login</a>
+        <a href="https://aff.daotra.io/register" class="text-center rounded-md bg-gradient-to-r from-accentBlue to-accentCyan px-3 py-2.5 text-sm font-semibold text-obsidian-950">Publisher Register</a>
+        <a href="https://adv.daotra.io/register" class="text-center rounded-md bg-gradient-to-r from-accentBlue to-accentCyan px-3 py-2.5 text-sm font-semibold text-obsidian-950">Advertiser Register</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden border-b border-white/[0.06]">
+    <div class="pointer-events-none absolute inset-0 bg-grid"></div>
+    <div class="pointer-events-none absolute inset-0 bg-radial-fade"></div>
+    <div class="relative max-w-7xl mx-auto grid gap-12 pt-28 pb-16 px-6 lg:grid-cols-2 lg:items-center lg:pt-32">
+      <div>
+        <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accentCyan">International Performance Marketing Network</p>
+        <h1 class="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
+          <span class="block" style="color:#0066FF">One network</span>
+          <span class="block" style="color:#00F0FF">All traffic sources</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-slate-400">
+          Daotra connects publishers and advertisers across
+          <a href="#igaming" class="text-white underline decoration-white/25 underline-offset-4 hover:decoration-accentCyan">iGaming</a>,
+          <a href="#prediction-markets" class="text-white underline decoration-white/25 underline-offset-4 hover:decoration-accentCyan">Prediction Markets</a>, and
+          <a href="#tech-verticals" class="text-white underline decoration-white/25 underline-offset-4 hover:decoration-accentCyan">Tech Verticals</a>
+          — with live coverage in 100s of markets and counting.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a href="https://aff.daotra.io/register" class="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-md font-semibold text-obsidian-950 bg-gradient-to-r from-accentBlue to-accentCyan">Publisher Register →</a>
+          <a href="https://adv.daotra.io/register" class="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-md font-medium border border-white/15 bg-white/[0.02] hover:border-accentCyan/60">Advertiser Register →</a>
+        </div>
+      </div>
+
+      <div class="relative h-[420px] sm:h-[480px] rounded-2xl border border-white/[0.06] bg-obsidian-800/60 overflow-hidden">
+        <canvas id="globe-canvas" class="h-full w-full block"></canvas>
+        <div id="globe-panel" class="hidden md:flex pointer-events-none absolute inset-0 items-end p-6">
+          <div class="glass pointer-events-auto w-full max-w-sm rounded-xl p-6">
+            <p class="font-mono text-xs uppercase tracking-widest text-accentCyan">Live network coverage</p>
+            <div class="grid grid-cols-3 gap-4 mt-4">
+              <div><p class="font-display text-2xl font-semibold">26</p><p class="text-xs text-slate-400">GEOs</p></div>
+              <div><p class="font-display text-2xl font-semibold">2500+</p><p class="text-xs text-slate-400">Active offers</p></div>
+              <div><p class="font-display text-2xl font-semibold">3</p><p class="text-xs text-slate-400">Verticals</p></div>
+            </div>
+            <p class="mt-4 text-sm text-slate-400">Drag to rotate, or click a marker to see that GEO's coverage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="border-b border-white/[0.06] bg-obsidian-800/40">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 py-10 px-6">
+      <div><p class="font-mono text-3xl font-semibold">26</p><p class="mt-1 text-xs uppercase tracking-widest text-slate-400">Active GEOs</p></div>
+      <div><p class="font-mono text-3xl font-semibold">2500+</p><p class="mt-1 text-xs uppercase tracking-widest text-slate-400">Live offers</p></div>
+      <div><p class="font-mono text-3xl font-semibold">3</p><p class="mt-1 text-xs uppercase tracking-widest text-slate-400">Verticals</p></div>
+      <div><p class="font-mono text-3xl font-semibold">10</p><p class="mt-1 text-xs uppercase tracking-widest text-slate-400">Primary markets</p></div>
+    </div>
+  </section>
+
+  <!-- VERTICALS (detailed sections, anchor targets) -->
+  <section class="border-b border-white/[0.06] py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accentCyan">Verticals</p>
+      <h2 class="mt-3 max-w-xl font-display text-3xl font-semibold tracking-tight">Three verticals. One network.</h2>
+
+      <div class="mt-14 space-y-8">
+        <div id="igaming" class="scroll-mt-24 grid gap-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 lg:grid-cols-[1fr_1.1fr] lg:p-10">
+          <div>
+            <svg class="h-9 w-9 text-accentCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1"/><circle cx="15.5" cy="15.5" r="1"/></svg>
+            <p class="mt-4 font-mono text-xs uppercase tracking-widest text-accentCyan">Regulated real-money gaming operators</p>
+            <h3 class="mt-2 font-display text-2xl font-semibold">iGaming</h3>
+            <p class="mt-4 text-sm leading-relaxed text-slate-400">Daotra routes publisher traffic to licensed sportsbooks and casinos, with deal structures and compliance tooling built for a regulated vertical from the ground up.</p>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-xs uppercase tracking-widest text-slate-400">Infrastructure services</p>
+            <ul class="mt-3 space-y-3 text-sm text-slate-400">
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Real-time postbacks on Daotra's platform</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Real-time deposit and bet-event tracking</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Regional licensing and compliance overlays per market</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>CPA, RevShare, and Hybrid deal structuring</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="prediction-markets" class="scroll-mt-24 grid gap-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 lg:grid-cols-[1fr_1.1fr] lg:p-10">
+          <div>
+            <svg class="h-9 w-9 text-accentCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 17 9 11 13 15 21 7"/></svg>
+            <p class="mt-4 font-mono text-xs uppercase tracking-widest text-accentCyan">Event contract & forecasting infrastructure</p>
+            <h3 class="mt-2 font-display text-2xl font-semibold">Prediction Markets</h3>
+            <p class="mt-4 text-sm leading-relaxed text-slate-400">One of the fastest-growing verticals in performance marketing. Daotra gives publishers early access to event-contract and forecasting platforms where users place predictions on real-time global events as they unfold.</p>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-xs uppercase tracking-widest text-slate-400">Infrastructure services</p>
+            <ul class="mt-3 space-y-3 text-sm text-slate-400">
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Publisher traffic directed to live predictions on real-time global events</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Contract-settlement conversion tracking</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Early-mover access as new markets go live</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Cross-platform attribution for multi-touch journeys</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="tech-verticals" class="scroll-mt-24 grid gap-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 lg:grid-cols-[1fr_1.1fr] lg:p-10">
+          <div>
+            <svg class="h-9 w-9 text-accentCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>
+            <p class="mt-4 font-mono text-xs uppercase tracking-widest text-accentCyan">VPN, SaaS & performance tech</p>
+            <h3 class="mt-2 font-display text-2xl font-semibold">Tech Verticals</h3>
+            <p class="mt-4 text-sm leading-relaxed text-slate-400">Consumer privacy tools, fintech, and utility apps that convert on measurable actions, with tooling built to bundle offers across categories under one payout relationship.</p>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-xs uppercase tracking-widest text-slate-400">Platform capabilities</p>
+            <ul class="mt-3 space-y-3 text-sm text-slate-400">
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Trial-to-paid funnel tracking</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Install and signup attribution across mobile and desktop</li>
+              <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accentCyan"></span>Multi-offer bundling across VPN, fintech, and utility apps</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVERTISER MARQUEE -->
+  <section class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accentCyan">Advertiser Partners</p>
+      <h2 class="mt-3 max-w-xl font-display text-3xl font-semibold tracking-tight">Live campaigns, run by real operators.</h2>
+    </div>
+    <div id="marquee-wrap" class="relative mt-10 cursor-grab overflow-hidden py-2 select-none" style="touch-action:none;">
+      <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-black to-transparent"></div>
+      <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-black to-transparent"></div>
+      <div id="marquee-track" class="marquee-track flex w-max"></div>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/[0.06] bg-black">
+    <div class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-6 gap-10">
+      <div class="col-span-2">
+        <div class="flex items-center gap-2">
+          <svg class="h-6 w-6 text-accentCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/></svg>
+          <span class="font-display text-lg font-semibold tracking-tight">Daotra</span>
+        </div>
+        <p class="mt-4 max-w-xs text-sm text-slate-400">International performance marketing and affiliate network for iGaming, Prediction Markets, and Tech Verticals.</p>
+        <div class="mt-5 flex items-center gap-3">
+          <a href="https://t.me/daotra" target="_blank" rel="noopener noreferrer" aria-label="Telegram" class="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-slate-400 hover:border-accentCyan/40 hover:text-accentCyan">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+          </a>
+          <a href="https://linkedin.com/company/daotra" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-slate-400 hover:border-accentCyan/40 hover:text-accentCyan">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.44-2.14 2.94v5.66H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.11 20.45H3.56V9h3.55z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-display text-xs font-semibold uppercase tracking-widest text-slate-400">Network</h3>
+        <ul class="mt-4 space-y-3 text-sm text-slate-400">
+          <li><a href="#" class="hover:text-accentCyan">About Daotra</a></li>
+          <li><a href="#" class="hover:text-accentCyan">Publishers</a></li>
+          <li><a href="#" class="hover:text-accentCyan">Advertisers</a></li>
+          <li><a href="#" class="hover:text-accentCyan">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display text-xs font-semibold uppercase tracking-widest text-slate-400">Verticals</h3>
+        <ul class="mt-4 space-y-3 text-sm text-slate-400">
+          <li><a href="#igaming" class="hover:text-accentCyan">iGaming</a></li>
+          <li><a href="#prediction-markets" class="hover:text-accentCyan">Prediction Markets</a></li>
+          <li><a href="#tech-verticals" class="hover:text-accentCyan">Tech Verticals</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display text-xs font-semibold uppercase tracking-widest text-slate-400">Account</h3>
+        <ul class="mt-4 space-y-3 text-sm text-slate-400">
+          <li><a href="https://aff.daotra.io/register" class="hover:text-accentCyan">Publisher Register</a></li>
+          <li><a href="https://adv.daotra.io/register" class="hover:text-accentCyan">Advertiser Register</a></li>
+          <li><a href="https://aff.daotra.io/login" class="hover:text-accentCyan">Publisher Login</a></li>
+          <li><a href="https://adv.daotra.io/login" class="hover:text-accentCyan">Advertiser Login</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display text-xs font-semibold uppercase tracking-widest text-slate-400">Legal</h3>
+        <ul class="mt-4 space-y-3 text-sm text-slate-400">
+          <li><a href="#" class="hover:text-accentCyan">Terms & Conditions</a></li>
+          <li><a href="#" class="hover:text-accentCyan">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 pb-10 pt-6 border-t border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-slate-500">
+      <p>&copy; 2026 Daotra.</p>
+      <p class="max-w-2xl">Daotra promotes regulated and licensed operators only. Publishers are responsible for complying with all applicable local advertising, gambling, and consumer-protection laws in the jurisdictions they target. 18+ / 21+ where applicable. Please gamble responsibly.</p>
+    </div>
+  </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // Mirrors data/geo-offers.json (26 GEOs, 3 verticals: iGaming, Prediction
+  // Markets, Tech Verticals). tier drives ring pulses + marker size, same as
+  // the real globe-canvas.tsx.
+  const COUNTRIES = [
+    {name:"United States",lat:39.8,lng:-98.6,offers:214,tier:"primary"},
+    {name:"Canada",lat:56.1,lng:-106.3,offers:88,tier:"primary"},
+    {name:"Brazil",lat:-14.2,lng:-51.9,offers:176,tier:"primary"},
+    {name:"Mexico",lat:23.6,lng:-102.5,offers:97,tier:"growth"},
+    {name:"Argentina",lat:-38.4,lng:-63.6,offers:64,tier:"growth"},
+    {name:"Colombia",lat:4.6,lng:-74.3,offers:52,tier:"growth"},
+    {name:"United Kingdom",lat:55.4,lng:-3.4,offers:189,tier:"primary"},
+    {name:"Germany",lat:51.2,lng:10.4,offers:142,tier:"primary"},
+    {name:"France",lat:46.6,lng:2.2,offers:118,tier:"primary"},
+    {name:"Spain",lat:40.5,lng:-3.7,offers:103,tier:"primary"},
+    {name:"Italy",lat:42.5,lng:12.6,offers:96,tier:"growth"},
+    {name:"Sweden",lat:60.1,lng:18.6,offers:71,tier:"growth"},
+    {name:"Poland",lat:51.9,lng:19.1,offers:58,tier:"growth"},
+    {name:"Netherlands",lat:52.1,lng:5.3,offers:67,tier:"growth"},
+    {name:"Turkey",lat:38.9,lng:35.2,offers:84,tier:"growth"},
+    {name:"Nigeria",lat:9.1,lng:8.7,offers:132,tier:"primary"},
+    {name:"South Africa",lat:-30.6,lng:22.9,offers:91,tier:"growth"},
+    {name:"Kenya",lat:-0.02,lng:37.9,offers:47,tier:"emerging"},
+    {name:"Ghana",lat:7.9,lng:-1.0,offers:33,tier:"emerging"},
+    {name:"India",lat:20.6,lng:79.0,offers:168,tier:"primary"},
+    {name:"Philippines",lat:12.9,lng:121.8,offers:79,tier:"growth"},
+    {name:"Indonesia",lat:-0.8,lng:113.9,offers:61,tier:"growth"},
+    {name:"Vietnam",lat:14.1,lng:108.3,offers:54,tier:"growth"},
+    {name:"Japan",lat:36.2,lng:138.3,offers:73,tier:"growth"},
+    {name:"United Arab Emirates",lat:23.4,lng:53.8,offers:58,tier:"growth"},
+    {name:"Australia",lat:-25.3,lng:133.8,offers:87,tier:"primary"},
+  ];
+
+  const canvas = document.getElementById('globe-canvas');
+  const container = canvas.parentElement;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+  camera.position.z = 5.2;
+
+  function resize() {
+    const w = container.clientWidth, h = container.clientHeight;
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const globeGroup = new THREE.Group();
+  scene.add(globeGroup);
+
+  const sphereGeo = new THREE.SphereGeometry(2, 48, 48);
+  const sphereMat = new THREE.MeshPhongMaterial({ color: 0x000000, emissive: 0x0066FF, emissiveIntensity: 0.07, shininess: 12 });
+  globeGroup.add(new THREE.Mesh(sphereGeo, sphereMat));
+
+  const graticuleMat = new THREE.LineBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.12 });
+  for (let i = 0; i <= 12; i++) {
+    const lng = (i / 12) * Math.PI * 2;
+    const pts = [];
+    for (let j = 0; j <= 32; j++) {
+      const lat = (j / 32) * Math.PI - Math.PI / 2;
+      pts.push(new THREE.Vector3(2.001*Math.cos(lat)*Math.cos(lng), 2.001*Math.sin(lat), 2.001*Math.cos(lat)*Math.sin(lng)));
+    }
+    globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), graticuleMat));
+  }
+  for (let j = 1; j < 6; j++) {
+    const lat = (j / 6) * Math.PI - Math.PI / 2;
+    const pts = [];
+    for (let i = 0; i <= 48; i++) {
+      const lng = (i / 48) * Math.PI * 2;
+      pts.push(new THREE.Vector3(2.001*Math.cos(lat)*Math.cos(lng), 2.001*Math.sin(lat), 2.001*Math.cos(lat)*Math.sin(lng)));
+    }
+    globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), graticuleMat));
+  }
+
+  const atmoGeo = new THREE.SphereGeometry(2.22, 48, 48);
+  const atmoMat = new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.06, side: THREE.BackSide });
+  globeGroup.add(new THREE.Mesh(atmoGeo, atmoMat));
+
+  function latLngToVec3(lat, lng, r) {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lng + 180) * (Math.PI / 180);
+    return new THREE.Vector3(-r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+  }
+
+  const markerColor = (tier) => tier === 'primary' ? 0x00F0FF : tier === 'growth' ? 0x0066FF : 0x7C5CFF;
+
+  // Three.js core has no built-in text renderer, so each GEO label is baked
+  // into a small canvas texture and shown as a Sprite - sprites always face
+  // the camera automatically, which is exactly the "billboard text" behavior
+  // a globe label needs regardless of rotation.
+  function makeLabelSprite(text) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const fontSize = 34;
+    ctx.font = `500 ${fontSize}px Inter, sans-serif`;
+    const textWidth = ctx.measureText(text).width;
+    canvas.width = textWidth + 24;
+    canvas.height = fontSize + 16;
+    ctx.font = `500 ${fontSize}px Inter, sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, 12, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+    const sprite = new THREE.Sprite(material);
+    const scale = 0.0028;
+    sprite.scale.set(canvas.width * scale, canvas.height * scale, 1);
+    return sprite;
+  }
+
+  const markers = [];
+  COUNTRIES.forEach((c) => {
+    const pos = latLngToVec3(c.lat, c.lng, 2.02);
+    const size = 0.02 + Math.min(c.offers / 220, 1) * 0.035;
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(size, 12, 12), new THREE.MeshBasicMaterial({ color: markerColor(c.tier) }));
+    mesh.position.copy(pos);
+    mesh.userData = c;
+    globeGroup.add(mesh);
+    markers.push(mesh);
+
+    // Label sprite, offset slightly outward from the node so it doesn't
+    // overlap the dot, physically anchored to the globe (rotates with it).
+    const label = makeLabelSprite(c.name);
+    const labelPos = latLngToVec3(c.lat, c.lng, 2.16);
+    label.position.copy(labelPos);
+    globeGroup.add(label);
+  });
+
+  scene.add(new THREE.AmbientLight(0x8899ff, 0.9));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+  dirLight.position.set(5, 3, 5);
+  scene.add(dirLight);
+
+  let dragging = false, lastX = 0, lastY = 0, autoRotate = true;
+  const velX = 0.0015;
+
+  canvas.addEventListener('pointerdown', (e) => { dragging = true; autoRotate = false; lastX = e.clientX; lastY = e.clientY; });
+  window.addEventListener('pointerup', () => { dragging = false; setTimeout(() => autoRotate = true, 2500); });
+  window.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    globeGroup.rotation.y += dx * 0.005;
+    // Full 3D drag: vertical movement tilts pitch (rotation.x), clamped so
+    // the globe can't be flipped past its poles into a disorienting spin.
+    globeGroup.rotation.x = Math.max(-1.2, Math.min(1.2, globeGroup.rotation.x + dy * 0.005));
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+
+  const panel = document.getElementById('globe-panel');
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(markers);
+    if (hits.length) {
+      const c = hits[0].object.userData;
+      panel.classList.remove('hidden');
+      panel.classList.add('flex');
+      panel.querySelector('div.glass').innerHTML = `
+        <p class="font-mono text-xs uppercase tracking-widest text-accentCyan">${c.tier === 'primary' ? 'Primary GEO' : c.tier === 'growth' ? 'Growth GEO' : 'Emerging GEO'}</p>
+        <h3 class="mt-1 font-display text-xl font-semibold">${c.name}</h3>
+        <p class="mt-3 font-display text-2xl font-semibold">${c.offers}</p>
+        <p class="text-xs text-slate-400">Active offers</p>`;
+    }
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (autoRotate) globeGroup.rotation.y += velX;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // --- Advertiser marquee: auto-scroll on idle, pause + drag on hold ---
+  const PARTNERS = [
+    { name: "Boomerang Partners", domain: "boomerang-partners.com" },
+    { name: "Gypsy", domain: "gypsy.co" },
+    { name: "Shark Partners", domain: "shark.partners" },
+  ];
+  const track = document.getElementById('marquee-track');
+  const wrap = document.getElementById('marquee-wrap');
+  function partnerCard(p) {
+    const div = document.createElement('div');
+    div.className = "mx-3 flex h-28 w-64 shrink-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] px-6";
+    div.innerHTML = `<span class="font-display text-lg font-semibold tracking-tight">${p.name}</span><span class="font-mono text-xs text-slate-400">${p.domain}</span>`;
+    return div;
+  }
+  [...PARTNERS, ...PARTNERS].forEach(p => track.appendChild(partnerCard(p)));
+
+  let mOffset = 0, mDragging = false, mLastX = 0, mHalfWidth = 0;
+  function measureMarquee() { mHalfWidth = track.scrollWidth / 2; }
+  measureMarquee();
+  window.addEventListener('resize', measureMarquee);
+
+  function marqueeTick() {
+    if (!mDragging && mHalfWidth > 0) {
+      mOffset -= 0.5;
+      if (mOffset <= -mHalfWidth) mOffset += mHalfWidth;
+    }
+    track.style.transform = `translateX(${mOffset}px)`;
+    requestAnimationFrame(marqueeTick);
+  }
+  requestAnimationFrame(marqueeTick);
+
+  wrap.addEventListener('pointerdown', (e) => { mDragging = true; mLastX = e.clientX; wrap.setPointerCapture(e.pointerId); });
+  wrap.addEventListener('pointermove', (e) => {
+    if (!mDragging) return;
+    const delta = e.clientX - mLastX;
+    mLastX = e.clientX;
+    mOffset += delta;
+    if (mHalfWidth > 0) {
+      while (mOffset <= -mHalfWidth) mOffset += mHalfWidth;
+      while (mOffset > 0) mOffset -= mHalfWidth;
+    }
+  });
+  const endDrag = () => { mDragging = false; };
+  wrap.addEventListener('pointerup', endDrag);
+  wrap.addEventListener('pointerleave', endDrag);
+  wrap.addEventListener('pointercancel', endDrag);
+</script>
+</body>
+</html>

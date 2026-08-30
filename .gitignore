@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+next-env.d.ts
+
+# OpenNext / Cloudflare
+.open-next/
+.wrangler/
+cloudflare-env.d.ts
+
+# Local secrets - never commit real values
+.env
+.env.local
+.env.*.local
+.dev.vars
+
+# Misc
+.DS_Store
+*.log

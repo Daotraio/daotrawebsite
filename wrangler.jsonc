@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  // Two named environments rather than one bare/default config, on purpose:
+  // once you define ANY named environment, Wrangler warns if you deploy
+  // without specifying one (it's ambiguous which one you meant). Always
+  // deploy with an explicit --env=staging or --env=production - see the
+  // package.json scripts below and README's terminal steps.
+  "env": {
+    "staging": {
+      "name": "daotra-staging",
+      // No custom domain needed - this alone gives you a free, shareable
+      // https://daotra-staging.<your-subdomain>.workers.dev URL.
+      "workers_dev": true,
+      "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS"
+      }
+    },
+    "production": {
+      "name": "daotra",
+      // workers_dev is left off here on purpose - production is reached
+      // only via the real Custom Domains (daotra.io, aff., adv.) added in
+      // the Cloudflare dashboard, not a workers.dev URL.
+      "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS"
+      }
+    }
+  }
+}

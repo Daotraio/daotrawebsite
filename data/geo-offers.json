@@ -1,0 +1,354 @@
+{
+  "updatedAt": "2026-08-01",
+  "verticals": [
+    "iGaming",
+    "Prediction Markets",
+    "Tech Verticals"
+  ],
+  "countries": [
+    {
+      "iso": "US",
+      "name": "United States",
+      "region": "Americas",
+      "lat": 39.8,
+      "lng": -98.6,
+      "activeOffers": 214,
+      "verticals": [
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "CA",
+      "name": "Canada",
+      "region": "Americas",
+      "lat": 56.1,
+      "lng": -106.3,
+      "activeOffers": 88,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "BR",
+      "name": "Brazil",
+      "region": "Americas",
+      "lat": -14.2,
+      "lng": -51.9,
+      "activeOffers": 176,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "MX",
+      "name": "Mexico",
+      "region": "Americas",
+      "lat": 23.6,
+      "lng": -102.5,
+      "activeOffers": 97,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "AR",
+      "name": "Argentina",
+      "region": "Americas",
+      "lat": -38.4,
+      "lng": -63.6,
+      "activeOffers": 64,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "CO",
+      "name": "Colombia",
+      "region": "Americas",
+      "lat": 4.6,
+      "lng": -74.3,
+      "activeOffers": 52,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "GB",
+      "name": "United Kingdom",
+      "region": "Europe",
+      "lat": 55.4,
+      "lng": -3.4,
+      "activeOffers": 189,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "DE",
+      "name": "Germany",
+      "region": "Europe",
+      "lat": 51.2,
+      "lng": 10.4,
+      "activeOffers": 142,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "FR",
+      "name": "France",
+      "region": "Europe",
+      "lat": 46.6,
+      "lng": 2.2,
+      "activeOffers": 118,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "ES",
+      "name": "Spain",
+      "region": "Europe",
+      "lat": 40.5,
+      "lng": -3.7,
+      "activeOffers": 103,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "IT",
+      "name": "Italy",
+      "region": "Europe",
+      "lat": 42.5,
+      "lng": 12.6,
+      "activeOffers": 96,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "SE",
+      "name": "Sweden",
+      "region": "Europe",
+      "lat": 60.1,
+      "lng": 18.6,
+      "activeOffers": 71,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "PL",
+      "name": "Poland",
+      "region": "Europe",
+      "lat": 51.9,
+      "lng": 19.1,
+      "activeOffers": 58,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "NL",
+      "name": "Netherlands",
+      "region": "Europe",
+      "lat": 52.1,
+      "lng": 5.3,
+      "activeOffers": 67,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "TR",
+      "name": "Turkey",
+      "region": "Europe",
+      "lat": 38.9,
+      "lng": 35.2,
+      "activeOffers": 84,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "NG",
+      "name": "Nigeria",
+      "region": "Africa",
+      "lat": 9.1,
+      "lng": 8.7,
+      "activeOffers": 132,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "ZA",
+      "name": "South Africa",
+      "region": "Africa",
+      "lat": -30.6,
+      "lng": 22.9,
+      "activeOffers": 91,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "KE",
+      "name": "Kenya",
+      "region": "Africa",
+      "lat": -0.02,
+      "lng": 37.9,
+      "activeOffers": 47,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets"
+      ],
+      "tier": "emerging"
+    },
+    {
+      "iso": "GH",
+      "name": "Ghana",
+      "region": "Africa",
+      "lat": 7.9,
+      "lng": -1.0,
+      "activeOffers": 33,
+      "verticals": [
+        "iGaming"
+      ],
+      "tier": "emerging"
+    },
+    {
+      "iso": "IN",
+      "name": "India",
+      "region": "Asia",
+      "lat": 20.6,
+      "lng": 79.0,
+      "activeOffers": 168,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    },
+    {
+      "iso": "PH",
+      "name": "Philippines",
+      "region": "Asia",
+      "lat": 12.9,
+      "lng": 121.8,
+      "activeOffers": 79,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "ID",
+      "name": "Indonesia",
+      "region": "Asia",
+      "lat": -0.8,
+      "lng": 113.9,
+      "activeOffers": 61,
+      "verticals": [
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "VN",
+      "name": "Vietnam",
+      "region": "Asia",
+      "lat": 14.1,
+      "lng": 108.3,
+      "activeOffers": 54,
+      "verticals": [
+        "iGaming",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "JP",
+      "name": "Japan",
+      "region": "Asia",
+      "lat": 36.2,
+      "lng": 138.3,
+      "activeOffers": 73,
+      "verticals": [
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "AE",
+      "name": "United Arab Emirates",
+      "region": "Middle East",
+      "lat": 23.4,
+      "lng": 53.8,
+      "activeOffers": 58,
+      "verticals": [
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "growth"
+    },
+    {
+      "iso": "AU",
+      "name": "Australia",
+      "region": "Oceania",
+      "lat": -25.3,
+      "lng": 133.8,
+      "activeOffers": 87,
+      "verticals": [
+        "iGaming",
+        "Prediction Markets",
+        "Tech Verticals"
+      ],
+      "tier": "primary"
+    }
+  ]
+}
