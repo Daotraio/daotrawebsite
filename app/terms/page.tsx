@@ -148,7 +148,7 @@ export default function TermsPage() {
             its intended purpose. You retain ownership of creative and content you upload, and
             grant Daotra a license to host, display, and distribute it as necessary to operate the
             network (e.g. showing your creative to prospective counterparties). Nothing in these
-            Terms transfers ownership of either party's trademarks; use of Daotra's name or logo
+            Terms transfers ownership of either party&apos;s trademarks; use of Daotra&apos;s name or logo
             in your own marketing requires prior written consent.
           </p>
         </LegalSection>
@@ -158,7 +158,7 @@ export default function TermsPage() {
             Non-public information shared through the Platform — including payout rates, offer
             terms, performance data, and account information — is confidential. You agree to use
             such information only to perform your obligations under these Terms, and not to
-            disclose it to third parties except as required by law or with the disclosing party's
+            disclose it to third parties except as required by law or with the disclosing party&apos;s
             written consent.
           </p>
         </LegalSection>
@@ -179,7 +179,7 @@ export default function TermsPage() {
             To the maximum extent permitted by law, Daotra will not be liable for any indirect,
             incidental, special, consequential, or punitive damages, or for any loss of profits,
             revenue, data, or goodwill, arising out of or related to your use of the Platform,
-            even if advised of the possibility of such damages. Daotra's total aggregate liability
+            even if advised of the possibility of such damages. Daotra&apos;s total aggregate liability
             for any claim arising out of or relating to these Terms or the Platform will not
             exceed the fees actually paid by you to Daotra (or, for Publishers, the amount payable
             to you) in the three months preceding the event giving rise to the claim.
@@ -191,7 +191,7 @@ export default function TermsPage() {
             You agree to indemnify, defend, and hold harmless Daotra and its officers, employees,
             and affiliates from any claim, liability, damage, loss, or expense (including
             reasonable legal fees) arising from your breach of these Terms, your violation of
-            applicable law, or your infringement of any third party's rights, including claims
+            applicable law, or your infringement of any third party&apos;s rights, including claims
             arising from offers you have advertised or traffic you have generated.
           </p>
         </LegalSection>

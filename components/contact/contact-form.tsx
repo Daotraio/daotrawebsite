@@ -77,7 +77,7 @@ export function ContactForm() {
           <Input id="company" placeholder="Acme Media" {...register("company")} />
         </div>
         <div>
-          <Label htmlFor="inquiryType">I'm reaching out as a</Label>
+          <Label htmlFor="inquiryType">I&apos;m reaching out as a</Label>
           <Select id="inquiryType" {...register("inquiryType")}>
             <option value="general">General inquiry</option>
             <option value="publisher">Publisher</option>
@@ -100,7 +100,7 @@ export function ContactForm() {
 
       {status === "success" && (
         <p className="flex items-center gap-2 text-sm text-accent-cyan">
-          <CheckCircle2 className="h-4 w-4" /> Message sent — we'll reply within one business day.
+          <CheckCircle2 className="h-4 w-4" /> Message sent — we&apos;ll reply within one business day.
         </p>
       )}
       {status === "error" && (

@@ -37,7 +37,7 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
       const el = containerRef.current;
       const { clientWidth, clientHeight } = el;
 
-      const world: GlobeInstance = new GlobeGl(el)
+      const world: GlobeInstance = (new GlobeGl(el) as GlobeInstance)
         .width(clientWidth)
         .height(clientHeight)
         .backgroundColor("rgba(0,0,0,0)")

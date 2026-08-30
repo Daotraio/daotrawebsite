@@ -36,7 +36,7 @@ export default function PrivacyPage() {
             &ldquo;Platform&rdquo;). This Policy applies to Publishers, Advertisers, and website
             visitors. It does not cover the privacy practices of the third-party operators
             (iGaming, Prediction Markets, Tech Verticals, or other) that Publishers promote — those are
-            governed by each operator's own privacy policy.
+            governed by each operator&apos;s own privacy policy.
           </p>
         </LegalSection>
 
@@ -173,8 +173,8 @@ export default function PrivacyPage() {
               </span>,
               <span key="counterparties">
                 <strong className="text-foreground">Network counterparties:</strong> to facilitate
-                a match, we may share limited business information (e.g. a Publisher's traffic
-                profile, an Advertiser's offer terms) between Publishers and Advertisers — never
+                a match, we may share limited business information (e.g. a Publisher&apos;s traffic
+                profile, an Advertiser&apos;s offer terms) between Publishers and Advertisers — never
                 payment credentials or unnecessary personal data.
               </span>,
               <span key="legal">
@@ -197,7 +197,7 @@ export default function PrivacyPage() {
             Daotra operates internationally, and personal data may be processed in countries
             other than your own, including countries that may not provide the same level of data
             protection. Where we transfer personal data out of the EEA, UK, or Switzerland, we
-            rely on recognized transfer mechanisms such as the European Commission's Standard
+            rely on recognized transfer mechanisms such as the European Commission&apos;s Standard
             Contractual Clauses, the UK International Data Transfer Addendum, or an applicable
             adequacy decision.
           </p>

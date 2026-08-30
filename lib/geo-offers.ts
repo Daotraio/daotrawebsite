@@ -40,7 +40,7 @@ export const VERTICAL_COLORS: Record<Vertical, string> = {
 export function dominantVertical(country: GeoOfferCountry): Vertical {
   // With no per-vertical split in the dataset, treat the first listed vertical
   // as the market's lead line of business for marker coloring.
-  return country.verticals[0];
+  return country.verticals[0]!;
 }
 
 export function markerColor(country: GeoOfferCountry): string {

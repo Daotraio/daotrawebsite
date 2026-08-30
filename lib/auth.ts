@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as { role: "publisher" | "advertiser" }).role;
+        token.role = (user as unknown as { role: "publisher" | "advertiser" }).role;
       }
       return token;
     },

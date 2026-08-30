@@ -75,7 +75,7 @@ export default function AboutPage() {
             <p className="mt-4 text-muted-foreground">
               Every advertiser on Daotra is reviewed for licensing status in the markets they
               target before their offers go live. Publishers remain responsible for their own
-              creative and targeting compliance, but they're never left guessing which operators
+              creative and targeting compliance, but they&apos;re never left guessing which operators
               are legitimate.
             </p>
           </div>
