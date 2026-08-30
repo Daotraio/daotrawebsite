@@ -42,25 +42,14 @@ export default function PrivacyPage() {
           <p>
             We collect what&apos;s needed to run the Platform: account and application details (name,
             company, email, Telegram username, password), verification information for licensing
-            or tax purposes, payment details needed to send or receive payouts, basic usage and
-            device data, and anything you send us directly through the contact form, email, or
-            Telegram. We use this to review applications, operate your account and dashboard,
-            process payments, prevent fraud, respond to your messages, and meet our legal and tax
+            purposes, basic usage and device data, and anything you send us directly through the
+            contact form, email, or Telegram. We use this to review applications, operate your
+            account and dashboard, prevent fraud, respond to your messages, and meet our legal
             obligations. We don&apos;t sell personal data.
           </p>
         </LegalSection>
 
-        <LegalSection id="sharing" title="3. Sharing">
-          <p>
-            We share personal data only where it&apos;s needed to run the Platform - with service
-            providers such as hosting and payment processing, with the other side of a match
-            (e.g. limited traffic or offer details between a Publisher and Advertiser, never
-            payment credentials), or where required by law or to protect the rights and safety of
-            Daotra and our users.
-          </p>
-        </LegalSection>
-
-        <LegalSection id="your-rights" title="4. Your rights">
+        <LegalSection id="your-rights" title="3. Your rights">
           <p>
             Depending on where you&apos;re located, you may have the right to access, correct, or
             request deletion of your personal data, and to object to or restrict certain
@@ -73,7 +62,7 @@ export default function PrivacyPage() {
           </p>
         </LegalSection>
 
-        <LegalSection id="changes" title="5. Changes & contact">
+        <LegalSection id="changes" title="4. Changes & contact">
           <p>
             We may update this Policy from time to time to reflect changes in our practices; the
             &ldquo;Last updated&rdquo; date above reflects the most recent revision. For any

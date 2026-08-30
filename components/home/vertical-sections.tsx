@@ -13,13 +13,13 @@ const VERTICALS: {
   {
     id: "igaming",
     icon: Dices,
-    name: "iGaming",
+    name: "iGaming & Sweepstakes",
     tagline: "Regulated real-money gaming operators",
     description:
       "Daotra routes publisher traffic to licensed sportsbooks and casinos, with deal structures and compliance tooling built for a regulated vertical from the ground up.",
     services: [
       "Real-time postbacks on Daotra's platform",
-      "Dedicated Sweepstakes casino and promotions coverage alongside real-money offers",
+      "Full coverage of Sweepstakes social casino offers",
       "Regional licensing and compliance overlays per market",
       "CPA, RevShare, and Hybrid deal structuring",
       "Responsible-gambling signal passthrough to operators",

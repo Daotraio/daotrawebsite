@@ -14,7 +14,7 @@ const COLUMNS: { title: string; links: { href: string; label: string; external?:
   {
     title: "Verticals",
     links: [
-      { href: "/#igaming", label: "iGaming" },
+      { href: "/#igaming", label: "iGaming & Sweepstakes" },
       { href: "/#prediction-markets", label: "Prediction Markets" },
       { href: "/#tech-verticals", label: "Tech Verticals" },
     ],

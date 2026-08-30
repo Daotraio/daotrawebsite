@@ -67,40 +67,29 @@ export default function TermsPage() {
           </p>
         </LegalSection>
 
-        <LegalSection id="payments" title="4. Payments">
-          <p>
-            Payout schedule, currency, and minimum thresholds are set out in your Publisher or
-            Advertiser Agreement. Daotra and Advertisers may adjust or reverse payment for
-            conversions later found to be fraudulent or invalid. You&apos;re responsible for any taxes
-            owed on amounts you receive, and we may need tax information from you before releasing
-            payment where the law requires it.
-          </p>
-        </LegalSection>
-
-        <LegalSection id="ip-confidentiality" title="5. Intellectual property & confidentiality">
+        <LegalSection id="ip-confidentiality" title="4. Intellectual property & confidentiality">
           <p>
             The Platform, including its software and the Daotra name and branding, belongs to
             Daotra. We grant you a limited license to use it for its intended purpose, and using
             our name or logo in your own marketing needs our written consent first. Non-public
-            information you access through the Platform - offer terms, payout rates, performance
-            data - is confidential, and should only be used to run your campaigns.
+            information you access through the Platform is confidential, and should only be
+            used to run your campaigns.
           </p>
         </LegalSection>
 
-        <LegalSection id="disclaimers" title="6. Disclaimers & limitation of liability">
+        <LegalSection id="disclaimers" title="5. Disclaimers & limitation of liability">
           <p>
             The Platform is provided &ldquo;as is,&rdquo; without warranties of any kind, and we
             don&apos;t guarantee it will be uninterrupted, error-free, or that any particular volume
             of traffic or revenue will result from your use of the network. To the fullest extent
             the law allows, Daotra is not liable for indirect, incidental, or consequential
-            damages, and our total liability for any claim will not exceed the fees you paid to
-            (or, for Publishers, were owed by) Daotra in the three months before the claim arose.
-            You agree to indemnify Daotra against claims arising from your breach of these Terms
-            or your violation of the law.
+            damages, and our total liability for any claim is capped at a reasonable amount set
+            out in your Publisher or Advertiser Agreement. You agree to indemnify Daotra against
+            claims arising from your breach of these Terms or your violation of the law.
           </p>
         </LegalSection>
 
-        <LegalSection id="termination" title="7. Suspension, termination, and disputes">
+        <LegalSection id="termination" title="6. Suspension, termination, and disputes">
           <p>
             We may suspend or terminate your account if we reasonably believe you&apos;ve violated
             these Terms, engaged in fraud, or lost a required license, and you can close your
@@ -110,7 +99,7 @@ export default function TermsPage() {
           </p>
         </LegalSection>
 
-        <LegalSection id="changes" title="8. Changes & contact">
+        <LegalSection id="changes" title="7. Changes & contact">
           <p>
             We may update these Terms from time to time; material changes will be announced by
             email or an in-platform notice, and continued use after that point means you accept

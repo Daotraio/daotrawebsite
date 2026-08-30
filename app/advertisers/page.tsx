@@ -32,7 +32,7 @@ const VERTICAL_DETAILS = [
   {
     id: "igaming",
     icon: Dices,
-    name: "iGaming",
+    name: "iGaming & Sweepstakes",
     description:
       "Sportsbooks, casinos, and a dedicated Sweepstakes offering. We only onboard operators holding valid licenses in every market they target through the network.",
   },

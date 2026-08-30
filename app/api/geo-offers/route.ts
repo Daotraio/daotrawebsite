@@ -6,13 +6,17 @@ export const runtime = "nodejs";
 /**
  * Mock live-data endpoint for the globe widget.
  *
- * Today this just returns the bundled seed dataset (data/geo-offers.json).
- * The point of routing through an API rather than importing the JSON
- * directly in every component is the seam it creates: swap the body of this
- * handler for a database read, a cache fed by inbound webhooks, or a
- * real-time source, and every consumer (useGeoOffers(), the globe canvas,
- * the stats panels) picks up the change automatically - no component code
- * needs to know where the data came from.
+ * NOTE: today this just returns the bundled seed dataset (data/geo-offers.json).
+ * This is the ONLY place that needs to change to go live: swap the body of
+ * this handler for a call to Daotra's tracking/CRM platform (a direct DB
+ * read, an internal API call, or a cache kept warm by inbound webhooks) that
+ * returns data matching the GeoOffersDataset shape (lib/geo-offers.ts).
+ * Every consumer - useGeoOffers() (lib/hooks/use-geo-offers.ts), the globe
+ * canvas, the click-to-country deal count, and the "Live network coverage"
+ * totals - reads exclusively through this endpoint already, so none of that
+ * component code needs to change. Do also shorten/remove the Cache-Control
+ * header below once this is backed by something that actually updates in
+ * real time.
  */
 export async function GET() {
   return NextResponse.json(geoOffers, {
