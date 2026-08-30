@@ -42,6 +42,10 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Pinned to match the wrangler devDependency in package.json - the
+          # action otherwise installs its own older default, which doesn't
+          # support wrangler.jsonc (env blocks silently vanish).
+          wranglerVersion: "4.125.0"
           command: deploy --env=staging
 
       - name: Deploy to production
@@ -50,4 +54,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.125.0"
           command: deploy --env=production
