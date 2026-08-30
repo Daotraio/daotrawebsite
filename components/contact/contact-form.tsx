@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { contactFormSchema, type ContactFormValues } from "@/lib/validation/contact";
-import { Label, Input, Textarea, Select } from "@/components/ui/form-fields";
+import { Label, Input, Textarea } from "@/components/ui/form-fields";
 import { TelegramInput } from "@/components/ui/telegram-input";
 import { Button } from "@/components/ui/button";
 
@@ -17,7 +17,7 @@ export function ContactForm() {
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
-    defaultValues: { inquiryType: "general", company: "", telegram: "", website: "" },
+    defaultValues: { company: "", telegram: "", website: "" },
   });
 
   const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
@@ -72,20 +72,9 @@ export function ContactForm() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="company">Company (optional)</Label>
-          <Input id="company" placeholder="Acme Media" {...register("company")} />
-        </div>
-        <div>
-          <Label htmlFor="inquiryType">I&apos;m reaching out as a</Label>
-          <Select id="inquiryType" {...register("inquiryType")}>
-            <option value="general">General inquiry</option>
-            <option value="publisher">Publisher</option>
-            <option value="advertiser">Advertiser</option>
-            <option value="press">Press</option>
-          </Select>
-        </div>
+      <div>
+        <Label htmlFor="company">Company (optional)</Label>
+        <Input id="company" placeholder="Acme Media" {...register("company")} />
       </div>
 
       <div>

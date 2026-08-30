@@ -13,7 +13,6 @@ export const contactFormSchema = z.object({
     .min(3, "Enter your Telegram username")
     .max(32)
     .regex(/^\w+$/, "Letters, numbers, and underscores only"),
-  inquiryType: z.enum(["publisher", "advertiser", "general", "press"]),
   message: z.string().trim().min(10, "Tell us a bit more (10 characters minimum)").max(4000),
   // Honeypot field: real users never see or fill this input (hidden via CSS),
   // so any non-empty value here is a strong bot signal.
