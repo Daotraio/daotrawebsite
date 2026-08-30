@@ -16,7 +16,7 @@ lives in `app/`.
 
 ## Local development
 
-Requires Node.js 20+.
+Requires Node.js 22+ (wrangler 4 requires it).
 
 ```bash
 npm install
