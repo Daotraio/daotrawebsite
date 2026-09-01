@@ -61,7 +61,7 @@ export default function AdvertisersPage() {
         description="Daotra gives advertisers access to a vetted publisher network across iGaming, Sweepstakes, and Prediction Markets - with fraud screening and full attribution support built in."
         actions={
           <>
-            <Button asChild size="lg">
+            <Button asChild size="lg" variant="outline">
               <a href="https://adv.daotra.io/register">
                 Advertiser Register <ArrowRight className="h-4 w-4" />
               </a>
@@ -127,7 +127,7 @@ export default function AdvertisersPage() {
               licensing check for regulated verticals.
             </p>
           </div>
-          <Button asChild size="lg">
+          <Button asChild size="lg" variant="outline">
             <a href="https://adv.daotra.io/register">
               Advertiser Register <ArrowRight className="h-4 w-4" />
             </a>

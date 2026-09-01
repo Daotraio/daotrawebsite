@@ -49,7 +49,7 @@ export default function PublishersPage() {
         description="Daotra gives publishers direct access to vetted advertisers across iGaming, Sweepstakes, and Prediction Markets - with transparent terms and payouts you can rely on."
         actions={
           <>
-            <Button asChild size="lg">
+            <Button asChild size="lg" variant="outline">
               <a href="https://aff.daotra.io/register">
                 Publisher Register <ArrowRight className="h-4 w-4" />
               </a>
@@ -97,7 +97,7 @@ export default function PublishersPage() {
               </li>
             ))}
           </ol>
-          <Button asChild size="lg" className="mt-10">
+          <Button asChild size="lg" variant="outline" className="mt-10">
             <a href="https://aff.daotra.io/register">
               Publisher Register <ArrowRight className="h-4 w-4" />
             </a>

@@ -53,10 +53,10 @@ export function SiteHeader() {
             <a href="https://adv.daotra.io/login">Advertiser Login</a>
           </Button>
           <span className="mx-1 h-5 w-px bg-white/10" aria-hidden="true" />
-          <Button asChild variant="primary" size="sm">
+          <Button asChild variant="ghost" size="sm">
             <a href="https://aff.daotra.io/register">Publisher Register</a>
           </Button>
-          <Button asChild variant="primary" size="sm">
+          <Button asChild variant="ghost" size="sm">
             <a href="https://adv.daotra.io/register">Advertiser Register</a>
           </Button>
         </div>
@@ -91,10 +91,10 @@ export function SiteHeader() {
               <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
                 <a href="https://adv.daotra.io/login">Advertiser Login</a>
               </Button>
-              <Button asChild variant="primary" size="md" onClick={() => setOpen(false)}>
+              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
                 <a href="https://aff.daotra.io/register">Publisher Register</a>
               </Button>
-              <Button asChild variant="primary" size="md" onClick={() => setOpen(false)}>
+              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
                 <a href="https://adv.daotra.io/register">Advertiser Register</a>
               </Button>
             </div>

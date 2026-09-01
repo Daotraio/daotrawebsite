@@ -60,7 +60,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About Daotra"
         title="Built by performance marketers, for performance marketers."
-        description="Daotra started as a small in-house affiliate desk for a handful of iGaming operators. Today it's an independent affiliate network spanning three verticals and 100s of markets - but the operating principle hasn't changed: real payouts, real traffic, no middlemen."
+        description="Daotra started as an affiliate team for a handful of iGaming operators. Today it's an independent affiliate network spanning three verticals and 100s of markets - backed by our own ongoing in-house traffic - and the operating principle hasn't changed: fast payouts, real traffic."
       />
 
       <section className="border-b border-white/[0.06] py-16">

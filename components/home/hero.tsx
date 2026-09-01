@@ -37,7 +37,7 @@ export function Hero() {
             - with live coverage in 100s of markets and counting.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg">
+            <Button asChild size="lg" variant="outline">
               <a href="https://aff.daotra.io/register">
                 Join as Publisher <ArrowRight className="h-4 w-4" />
               </a>

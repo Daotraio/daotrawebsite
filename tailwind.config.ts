@@ -57,12 +57,13 @@ const config: Config = {
         },
       },
       fontFamily: {
-        // A single humanist sans (Inter) for both text and display sizes -
-        // one neutral typeface at varying weight/tracking, Apple-style,
-        // rather than pairing in a separate geometric display face.
+        // A single humanist sans (Inter) everywhere - text, headings, and
+        // the font-mono utility (used for labels/eyebrows/stats) all alias
+        // the same variable, Apple-style: one typeface, varying
+        // weight/tracking, no separate display or monospace face.
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        mono: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       backgroundImage: {
         "grid-faint":

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -8,20 +8,15 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { CookieBanner } from "@/components/consent/cookie-banner";
 import { robotsMeta } from "@/lib/seo";
 
-// One humanist sans for both text and display sizes (Apple-style single
-// typeface, varied by weight/tracking) rather than pairing with a separate
-// geometric display face - --font-display reuses this variable too.
+// One humanist sans, everywhere - headings, body, labels, and buttons all
+// share this single typeface (Apple-style: one family, varied by weight/
+// tracking) rather than pairing with a separate display or mono face.
+// --font-display and the font-mono Tailwind utility both alias this same
+// variable (see tailwind.config.ts) so there's exactly one font loaded.
 const sans = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
   display: "swap",
 });
 
@@ -86,7 +81,7 @@ export default async function RootLayout({
   const isPortalHost = host.startsWith("aff.") || host.startsWith("adv.");
 
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={sans.variable}>
       <body className="min-h-screen flex flex-col font-sans">
         <script
           type="application/ld+json"
