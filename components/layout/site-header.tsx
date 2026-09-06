@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Orbit } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { NavAuthDropdown } from "@/components/layout/nav-auth-dropdown";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -43,22 +43,23 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        {/* Direct, single-click actions - no dropdown/modal step, and no raw
-            URLs shown to the user. Each button navigates immediately. */}
+        {/* Each of these two triggers opens a click-to-choose Publisher/
+            Advertiser menu (components/layout/nav-auth-dropdown.tsx) rather
+            than exposing 4 separate buttons. */}
         <div className="hidden md:flex items-center gap-1.5">
-          <Button asChild variant="ghost" size="sm">
-            <a href="https://aff.daotra.io/login">Publisher Login</a>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <a href="https://adv.daotra.io/login">Advertiser Login</a>
-          </Button>
+          <NavAuthDropdown
+            label="Login"
+            variant="ghost"
+            publisherHref="https://aff.daotra.io/login"
+            advertiserHref="https://adv.daotra.io/login"
+          />
           <span className="mx-1 h-5 w-px bg-white/10" aria-hidden="true" />
-          <Button asChild variant="ghost" size="sm">
-            <a href="https://aff.daotra.io/register">Publisher Register</a>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <a href="https://adv.daotra.io/register">Advertiser Register</a>
-          </Button>
+          <NavAuthDropdown
+            label="Register"
+            variant="ghost"
+            publisherHref="https://aff.daotra.io/register"
+            advertiserHref="https://adv.daotra.io/register"
+          />
         </div>
 
         <button
@@ -85,18 +86,20 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="mt-2 grid grid-cols-2 gap-2 border-t border-white/[0.06] pt-4">
-              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
-                <a href="https://aff.daotra.io/login">Publisher Login</a>
-              </Button>
-              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
-                <a href="https://adv.daotra.io/login">Advertiser Login</a>
-              </Button>
-              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
-                <a href="https://aff.daotra.io/register">Publisher Register</a>
-              </Button>
-              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
-                <a href="https://adv.daotra.io/register">Advertiser Register</a>
-              </Button>
+              <NavAuthDropdown
+                label="Login"
+                variant="outline"
+                size="md"
+                publisherHref="https://aff.daotra.io/login"
+                advertiserHref="https://adv.daotra.io/login"
+              />
+              <NavAuthDropdown
+                label="Register"
+                variant="outline"
+                size="md"
+                publisherHref="https://aff.daotra.io/register"
+                advertiserHref="https://adv.daotra.io/register"
+              />
             </div>
           </nav>
         </div>

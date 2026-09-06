@@ -20,15 +20,6 @@ const COLUMNS: { title: string; links: { href: string; label: string; external?:
     ],
   },
   {
-    title: "Account",
-    links: [
-      { href: "https://aff.daotra.io/register", label: "Publisher Register", external: true },
-      { href: "https://adv.daotra.io/register", label: "Advertiser Register", external: true },
-      { href: "https://aff.daotra.io/login", label: "Publisher Login", external: true },
-      { href: "https://adv.daotra.io/login", label: "Advertiser Login", external: true },
-    ],
-  },
-  {
     title: "Legal",
     links: [
       { href: "/terms", label: "Terms & Conditions" },
@@ -47,7 +38,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-white/[0.06] bg-obsidian-950">
       <div className="container py-16">
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2">
               <Orbit className="h-6 w-6 text-accent-silver" />

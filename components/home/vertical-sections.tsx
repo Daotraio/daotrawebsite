@@ -16,7 +16,7 @@ const VERTICALS: {
     name: "iGaming & Sweepstakes",
     tagline: "Regulated real-money gaming operators",
     description:
-      "Daotra routes publisher traffic to licensed sportsbooks and casinos, with deal structures and compliance tooling built for a regulated vertical from the ground up.",
+      "Daotra routes publisher traffic to licensed sportsbooks, casinos, and Sweepstakes platforms, as one of the industry's most established iGaming affiliate networks - with deal structures and compliance tooling built for a regulated vertical from the ground up.",
     services: [
       "Real-time postbacks on Daotra's platform",
       "Full coverage of Sweepstakes social casino offers",
@@ -31,7 +31,7 @@ const VERTICALS: {
     name: "Prediction Markets",
     tagline: "Event contract & forecasting infrastructure",
     description:
-      "One of the fastest-growing verticals in performance marketing. Daotra gives publishers early access to event-contract and forecasting platforms where users place predictions on real-time global events as they unfold, with attribution built for a newer kind of conversion event.",
+      "One of the fastest-growing verticals in performance marketing. Daotra gives publishers early access to leading Prediction Markets tech - event-contract and forecasting platforms where users place predictions on real-time global events as they unfold, with attribution built for a newer kind of conversion event.",
     services: [
       "Publisher traffic directed to live predictions on real-time global events",
       "Contract-settlement conversion tracking",

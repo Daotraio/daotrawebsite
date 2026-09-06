@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Advertisers",
   description:
-    "Scale acquisition across iGaming, Sweepstakes, and Prediction Markets with vetted, high-intent publisher traffic from Daotra's affiliate network.",
+    "B2B iGaming services for advertisers: scale acquisition across iGaming, Sweepstakes, and Prediction Markets with vetted, high-intent publisher traffic from Daotra's affiliate network.",
 };
 
 const BENEFITS = [
@@ -58,7 +58,7 @@ export default function AdvertisersPage() {
       <PageHero
         eyebrow="For Advertisers"
         title="Acquisition traffic you can actually verify."
-        description="Daotra gives advertisers access to a vetted publisher network across iGaming, Sweepstakes, and Prediction Markets - with fraud screening and full attribution support built in."
+        description="Daotra gives advertisers access to a vetted publisher network across iGaming, Sweepstakes, and Prediction Markets - full B2B iGaming services, fraud screening, and attribution support built in."
         actions={
           <>
             <Button asChild size="lg" variant="outline">

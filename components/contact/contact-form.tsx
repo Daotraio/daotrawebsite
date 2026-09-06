@@ -89,9 +89,15 @@ export function ContactForm() {
         {errors.message && <p className="mt-1.5 text-xs text-destructive">{errors.message.message}</p>}
       </div>
 
-      <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
+      <Button
+        type="submit"
+        size="lg"
+        variant="outline"
+        disabled={isSubmitting}
+        className="w-full sm:w-auto"
+      >
         {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-        {isSubmitting ? "Sending…" : "Send message"}
+        {isSubmitting ? "Submitting…" : "Submit"}
       </Button>
 
       {status === "success" && (

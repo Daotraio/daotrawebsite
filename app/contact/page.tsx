@@ -17,7 +17,7 @@ export default function ContactPage() {
         title="Let's talk about your traffic or your offers."
         description="Whether you're evaluating the network or already have an application in review, our team typically replies within hours. Fastest response: message us directly on Telegram."
         actions={
-          <Button asChild size="lg">
+          <Button asChild size="lg" variant="outline">
             <a href="https://t.me/daotra" target="_blank" rel="noopener noreferrer">
               <Send className="h-4 w-4" /> Message us on Telegram
             </a>
