@@ -1,8 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { Label, Input, Select } from "@/components/ui/form-fields";
+import { Label, Input } from "@/components/ui/form-fields";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { cn } from "@/lib/utils";
+
+const CURRENCY_OPTIONS = [
+  { value: "USD", label: "USD" },
+  { value: "EUR", label: "Euro" },
+];
+
+const TIMEFRAME_OPTIONS = [
+  { value: "daily", label: "Daily" },
+  { value: "monthly", label: "Monthly" },
+  { value: "yearly", label: "Yearly" },
+];
 
 type DealType = "CPA" | "HYB" | "RS";
 type Currency = "USD" | "EUR";
@@ -19,11 +31,13 @@ const DEAL_TYPES: { value: DealType; label: string }[] = [
 // (e.g. 5 FTDs on "daily" - $100 FTD Commission = $500, no further scaling).
 //
 // FTD Commission is a real user-entered rate, so the CPA portion of the
-// payout has no invented numbers. The RS%/Hyb portion still needs a
+// payout has no invented numbers. Hyb mode's RS% component still needs a
 // baseline NGR-per-FTD figure to turn a percentage into a dollar amount,
 // and no real figure was given for that - this constant is illustrative
 // only (see the on-page disclaimer) and should be replaced with Daotra's
-// actual average NGR per FTD before this goes live.
+// actual average NGR per FTD before this goes live. RS mode has no FTD
+// volume input at all, so it doesn't use this constant - see `commission`
+// below, where RS mode's "output" is just the chosen RS% itself.
 const RS_BASE_PER_FTD: Record<Currency, number> = { USD: 40, EUR: 36 };
 
 function formatCurrency(value: number, currency: Currency) {
@@ -46,11 +60,12 @@ export function CommissionCalculator() {
   const clampedCommission = Math.max(0, ftdCommission || 0);
   const clampedRs = Math.min(100, Math.max(1, rsPercent || 1));
 
+  // RS mode has no FTD volume input, so there's nothing to multiply a
+  // revenue-share percentage against - its "output" is just the chosen
+  // RS% itself, not a fabricated dollar total.
   const cpaPart = clampedFtd * clampedCommission;
   const commission =
-    dealType === "CPA"
-      ? cpaPart
-      : cpaPart + clampedFtd * RS_BASE_PER_FTD[currency] * (clampedRs / 100);
+    dealType === "CPA" ? cpaPart : cpaPart + clampedFtd * RS_BASE_PER_FTD[currency] * (clampedRs / 100);
 
   return (
     <section className="border-b border-white/[0.06] py-24">
@@ -90,52 +105,49 @@ export function CommissionCalculator() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="calc-currency">Currency</Label>
-                  <Select
+                  <SelectMenu
                     id="calc-currency"
                     value={currency}
-                    onChange={(e) => setCurrency(e.target.value as Currency)}
-                  >
-                    <option value="USD">USD</option>
-                    <option value="EUR">Euro</option>
-                  </Select>
+                    onChange={(v) => setCurrency(v as Currency)}
+                    options={CURRENCY_OPTIONS}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="calc-timeframe">Time frame</Label>
-                  <Select
+                  <SelectMenu
                     id="calc-timeframe"
                     value={timeFrame}
-                    onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
-                  >
-                    <option value="daily">Daily</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="yearly">Yearly</option>
-                  </Select>
+                    onChange={(v) => setTimeFrame(v as TimeFrame)}
+                    options={TIMEFRAME_OPTIONS}
+                  />
                 </div>
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <Label htmlFor="calc-ftd">FTD amount</Label>
-                  <Input
-                    id="calc-ftd"
-                    type="number"
-                    min={1}
-                    max={9999}
-                    value={ftdAmount}
-                    onChange={(e) => setFtdAmount(Number(e.target.value))}
-                  />
+              {dealType !== "RS" && (
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="calc-ftd">FTD amount</Label>
+                    <Input
+                      id="calc-ftd"
+                      type="number"
+                      min={1}
+                      max={9999}
+                      value={ftdAmount}
+                      onChange={(e) => setFtdAmount(Number(e.target.value))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="calc-ftd-commission">FTD Commission</Label>
+                    <Input
+                      id="calc-ftd-commission"
+                      type="number"
+                      min={0}
+                      value={ftdCommission}
+                      onChange={(e) => setFtdCommission(Number(e.target.value))}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="calc-ftd-commission">FTD Commission</Label>
-                  <Input
-                    id="calc-ftd-commission"
-                    type="number"
-                    min={0}
-                    value={ftdCommission}
-                    onChange={(e) => setFtdCommission(Number(e.target.value))}
-                  />
-                </div>
-              </div>
+              )}
 
               {dealType !== "CPA" && (
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -155,12 +167,25 @@ export function CommissionCalculator() {
             </div>
 
             <div className="flex flex-col items-start justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] p-6 lg:w-64 lg:items-center">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                Estimated {timeFrame} commission
-              </p>
-              <p className="mt-2 font-display text-3xl font-semibold text-foreground">
-                {formatCurrency(commission, currency)}
-              </p>
+              {dealType === "RS" ? (
+                <>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                    Your revenue share
+                  </p>
+                  <p className="mt-2 font-display text-3xl font-semibold text-foreground">
+                    {clampedRs}%
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                    Estimated {timeFrame} commission
+                  </p>
+                  <p className="mt-2 font-display text-3xl font-semibold text-foreground">
+                    {formatCurrency(commission, currency)}
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
