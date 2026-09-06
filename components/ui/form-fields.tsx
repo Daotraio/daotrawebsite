@@ -32,7 +32,15 @@ Textarea.displayName = "Textarea";
 
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
   ({ className, children, ...props }, ref) => (
-    <select ref={ref} className={cn(fieldClasses, "appearance-none", className)} {...props}>
+    // [color-scheme:dark] forces the native options popup (which the OS/
+    // browser renders outside our CSS, ignoring the field's own dark
+    // background) to use dark colors too - without it, some browsers show
+    // a jarring light popup regardless of the closed control's styling.
+    <select
+      ref={ref}
+      className={cn(fieldClasses, "appearance-none [color-scheme:dark]", className)}
+      {...props}
+    >
       {children}
     </select>
   )
