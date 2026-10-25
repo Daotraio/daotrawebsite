@@ -11,7 +11,7 @@ export default function RegisterChooserPage() {
   return (
     <AuthShell
       title="Join Daotra"
-      description="Tell us which side of the network you're on."
+      description="Apply to join the network as a Publisher."
       footer={null}
     >
       <PortalChooser mode="register" />

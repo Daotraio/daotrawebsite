@@ -11,7 +11,7 @@ export default function LoginChooserPage() {
   return (
     <AuthShell
       title="Log in to Daotra"
-      description="Publishers and advertisers each have their own portal."
+      description="Continue to the Publisher portal."
       footer={null}
     >
       <PortalChooser mode="login" />

@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Orbit } from "lucide-react";
-import { NavAuthDropdown } from "@/components/layout/nav-auth-dropdown";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -43,23 +43,17 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        {/* Each of these two triggers opens a click-to-choose Publisher/
-            Advertiser menu (components/layout/nav-auth-dropdown.tsx) rather
-            than exposing 4 separate buttons. */}
+        {/* Direct, single-click actions into the Publisher portal. Advertisers
+            don't self-register - they're onboarded via Telegram (see the
+            Advertisers page). */}
         <div className="hidden md:flex items-center gap-1.5">
-          <NavAuthDropdown
-            label="Login"
-            variant="ghost"
-            publisherHref="https://aff.daotra.io/login"
-            advertiserHref="https://adv.daotra.io/login"
-          />
+          <Button asChild variant="ghost" size="sm">
+            <a href="https://aff.daotra.io/login">Login</a>
+          </Button>
           <span className="mx-1 h-5 w-px bg-white/10" aria-hidden="true" />
-          <NavAuthDropdown
-            label="Register"
-            variant="ghost"
-            publisherHref="https://aff.daotra.io/register"
-            advertiserHref="https://adv.daotra.io/register"
-          />
+          <Button asChild variant="ghost" size="sm">
+            <a href="https://aff.daotra.io/register">Register</a>
+          </Button>
         </div>
 
         <button
@@ -86,20 +80,12 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="mt-2 grid grid-cols-2 gap-2 border-t border-white/[0.06] pt-4">
-              <NavAuthDropdown
-                label="Login"
-                variant="outline"
-                size="md"
-                publisherHref="https://aff.daotra.io/login"
-                advertiserHref="https://adv.daotra.io/login"
-              />
-              <NavAuthDropdown
-                label="Register"
-                variant="outline"
-                size="md"
-                publisherHref="https://aff.daotra.io/register"
-                advertiserHref="https://adv.daotra.io/register"
-              />
+              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
+                <a href="https://aff.daotra.io/login">Login</a>
+              </Button>
+              <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
+                <a href="https://aff.daotra.io/register">Register</a>
+              </Button>
             </div>
           </nav>
         </div>

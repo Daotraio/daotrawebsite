@@ -42,11 +42,6 @@ export function Hero() {
                 Join as Publisher <ArrowRight className="h-4 w-4" />
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href="https://adv.daotra.io/register">
-                Join as Advertiser <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
           </div>
         </div>
 

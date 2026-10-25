@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, ShieldAlert, Gauge, Users, Dices, TrendingUp, Cpu, LogIn } from "lucide-react";
+import { ArrowRight, ShieldAlert, Gauge, Users, Dices, TrendingUp, Cpu } from "lucide-react";
 import { PageHero } from "@/components/layout/page-hero";
 import { Card, Eyebrow } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,20 +59,6 @@ export default function AdvertisersPage() {
         eyebrow="For Advertisers"
         title="Acquisition traffic you can actually verify."
         description="Daotra gives advertisers access to a vetted publisher network across iGaming, Sweepstakes, and Prediction Markets - full B2B iGaming services, fraud screening, and attribution support built in."
-        actions={
-          <>
-            <Button asChild size="lg" variant="outline">
-              <a href="https://adv.daotra.io/register">
-                Advertiser Register <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href="https://adv.daotra.io/login">
-                Advertiser Login <LogIn className="h-4 w-4" />
-              </a>
-            </Button>
-          </>
-        }
       />
 
       <section className="border-b border-white/[0.06] py-24">
@@ -128,8 +114,8 @@ export default function AdvertisersPage() {
             </p>
           </div>
           <Button asChild size="lg" variant="outline">
-            <a href="https://adv.daotra.io/register">
-              Advertiser Register <ArrowRight className="h-4 w-4" />
+            <a href="https://t.me/daotra" target="_blank" rel="noopener noreferrer">
+              Contact us <ArrowRight className="h-4 w-4" />
             </a>
           </Button>
         </div>

@@ -96,7 +96,7 @@ export function AdvertiserMarquee() {
   return (
     <section className="border-b border-white/[0.06] py-24">
       <div className="container">
-        <Eyebrow>Advertiser Partners</Eyebrow>
+        <Eyebrow>Our Partners</Eyebrow>
         <h2 className="mt-3 max-w-xl font-display text-3xl font-semibold tracking-tight text-foreground">
           Live campaigns, run by real operators.
         </h2>
