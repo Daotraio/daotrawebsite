@@ -39,10 +39,16 @@ export function GlobeCanvas({ countries, onSelect, selected, className }: GlobeC
   const containerRef = React.useRef<HTMLDivElement>(null);
   const globeRef = React.useRef<GlobeInstance>(null);
   const onSelectRef = React.useRef(onSelect);
-  onSelectRef.current = onSelect;
   const countriesRef = React.useRef(countries);
-  countriesRef.current = countries;
   const [ready, setReady] = React.useState(false);
+
+  // Keep the latest props reachable from globe.gl's long-lived click
+  // handlers without re-initializing the globe. Synced in an effect (not
+  // during render) - handlers only run on user clicks, after this has run.
+  React.useEffect(() => {
+    onSelectRef.current = onSelect;
+    countriesRef.current = countries;
+  });
 
   // One-time init: builds the globe instance itself. Data is applied
   // separately below so a later dataset update (e.g. once the live fetch in

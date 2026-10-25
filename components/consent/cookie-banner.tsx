@@ -6,28 +6,47 @@ import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "daotra-cookie-consent";
 
-export function CookieBanner() {
-  const [visible, setVisible] = React.useState(false);
+const CONSENT_CHANGED_EVENT = "daotra-cookie-consent-changed";
 
-  React.useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (!stored) setVisible(true);
-    } catch {
-      // localStorage unavailable (privacy mode, etc.) - don't block the page over it.
-    }
-  }, []);
+function subscribe(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  window.addEventListener(CONSENT_CHANGED_EVENT, onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener(CONSENT_CHANGED_EVENT, onChange);
+  };
+}
+
+// "unavailable" = no stored choice can be read at all (server render, or
+// localStorage blocked in privacy mode) - treated as "don't show the banner"
+// so it never blocks the page over something we can't persist anyway.
+function getSnapshot() {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) ?? "none";
+  } catch {
+    return "unavailable";
+  }
+}
+
+function getServerSnapshot() {
+  return "unavailable";
+}
+
+export function CookieBanner() {
+  const stored = React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [dismissed, setDismissed] = React.useState(false);
 
   const choose = (choice: "accepted" | "essential-only") => {
     try {
       window.localStorage.setItem(STORAGE_KEY, choice);
+      window.dispatchEvent(new Event(CONSENT_CHANGED_EVENT));
     } catch {
       // ignore - the banner just won't persist across reloads in this case
     }
-    setVisible(false);
+    setDismissed(true);
   };
 
-  if (!visible) return null;
+  if (stored !== "none" || dismissed) return null;
 
   return (
     <div
