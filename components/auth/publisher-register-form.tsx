@@ -294,10 +294,12 @@ export function PublisherRegisterForm() {
       )}
 
       <div className="space-y-4">
-        <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
-          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-          {isSubmitting ? "Submitting…" : "Register"}
-        </Button>
+        <div className="flex justify-center">
+          <Button type="submit" size="md" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isSubmitting ? "Submitting…" : "Register"}
+          </Button>
+        </div>
         <p className="text-center text-xs text-muted-foreground">
           By registering you agree to our{" "}
           <a
