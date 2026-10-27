@@ -176,6 +176,40 @@ export function PublisherRegisterForm() {
           </div>
 
           <div>
+            <Label htmlFor="pub-password">
+              Password
+              <Req />
+            </Label>
+            <Input
+              id="pub-password"
+              type="password"
+              aria-required="true"
+              autoComplete="new-password"
+              {...register("password")}
+            />
+            <FieldError message={errors.password?.message} />
+          </div>
+
+          <div>
+            <Label htmlFor="pub-confirmPassword">
+              Verify Password
+              <Req />
+            </Label>
+            <Input
+              id="pub-confirmPassword"
+              type="password"
+              aria-required="true"
+              autoComplete="new-password"
+              {...register("confirmPassword")}
+            />
+            <FieldError message={errors.confirmPassword?.message} />
+          </div>
+
+          <p className="text-xs text-muted-foreground sm:col-span-2">
+            At least 8 characters. You&rsquo;ll log in with your email and this password.
+          </p>
+
+          <div>
             <Label htmlFor="pub-telegram">
               Telegram
               <Req />
@@ -251,46 +285,6 @@ export function PublisherRegisterForm() {
             <FieldError message={errors.address?.message} />
           </div>
         </div>
-      </section>
-
-      <section className="space-y-5" aria-labelledby="pub-password-heading">
-        <div id="pub-password-heading">
-          <SectionHeading>Password</SectionHeading>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="pub-password">
-              Password
-              <Req />
-            </Label>
-            <Input
-              id="pub-password"
-              type="password"
-              aria-required="true"
-              autoComplete="new-password"
-              {...register("password")}
-            />
-            <FieldError message={errors.password?.message} />
-          </div>
-
-          <div>
-            <Label htmlFor="pub-confirmPassword">
-              Verify Password
-              <Req />
-            </Label>
-            <Input
-              id="pub-confirmPassword"
-              type="password"
-              aria-required="true"
-              autoComplete="new-password"
-              {...register("confirmPassword")}
-            />
-            <FieldError message={errors.confirmPassword?.message} />
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          At least 8 characters. You&rsquo;ll log in with your email and this password.
-        </p>
       </section>
 
       {status === "error" && (
