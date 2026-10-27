@@ -74,10 +74,12 @@ export function LoginForm() {
         </p>
       )}
 
-      <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
-        {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-        {isSubmitting ? "Signing in…" : "Sign in"}
-      </Button>
+      <div className="flex justify-center">
+        <Button type="submit" size="md" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+          {isSubmitting ? "Signing in…" : "Sign in"}
+        </Button>
+      </div>
     </form>
   );
 }
