@@ -1,10 +1,11 @@
 import { Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getPublisherPortalUrls } from "@/lib/portal-urls";
 
 // Publisher is the only self-serve portal - advertisers are onboarded via
 // Telegram (see the Advertisers page), so there's no advertiser option here.
 export function PortalChooser({ mode }: { mode: "login" | "register" }) {
-  const affHref = `https://aff.daotra.io/${mode}`;
+  const affHref = getPublisherPortalUrls()[mode];
   const verb = mode === "login" ? "Login" : "Register";
 
   return (

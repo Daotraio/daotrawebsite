@@ -3,6 +3,7 @@ import { ArrowRight, Wallet, LineChart, Headset, Layers, LogIn } from "lucide-re
 import { PageHero } from "@/components/layout/page-hero";
 import { Card, Eyebrow } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getPublisherPortalUrls } from "@/lib/portal-urls";
 
 export const metadata: Metadata = {
   title: "Publishers",
@@ -41,6 +42,7 @@ const STEPS = [
 ];
 
 export default function PublishersPage() {
+  const portalUrls = getPublisherPortalUrls();
   return (
     <>
       <PageHero
@@ -50,12 +52,12 @@ export default function PublishersPage() {
         actions={
           <>
             <Button asChild size="lg" variant="outline">
-              <a href="https://aff.daotra.io/register">
+              <a href={portalUrls.register}>
                 Publisher Register <ArrowRight className="h-4 w-4" />
               </a>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a href="https://aff.daotra.io/login">
+              <a href={portalUrls.login}>
                 Publisher Login <LogIn className="h-4 w-4" />
               </a>
             </Button>
@@ -98,7 +100,7 @@ export default function PublishersPage() {
             ))}
           </ol>
           <Button asChild size="lg" variant="outline" className="mt-10">
-            <a href="https://aff.daotra.io/register">
+            <a href={portalUrls.register}>
               Publisher Register <ArrowRight className="h-4 w-4" />
             </a>
           </Button>

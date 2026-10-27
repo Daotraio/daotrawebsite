@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Orbit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { PortalUrls } from "@/lib/portal-urls";
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
@@ -14,7 +15,7 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact Us" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ portalUrls }: { portalUrls: PortalUrls }) {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
 
@@ -48,11 +49,11 @@ export function SiteHeader() {
             Advertisers page). */}
         <div className="hidden md:flex items-center gap-1.5">
           <Button asChild variant="ghost" size="sm">
-            <a href="https://aff.daotra.io/login">Login</a>
+            <a href={portalUrls.login}>Login</a>
           </Button>
           <span className="mx-1 h-5 w-px bg-white/10" aria-hidden="true" />
           <Button asChild variant="ghost" size="sm">
-            <a href="https://aff.daotra.io/register">Register</a>
+            <a href={portalUrls.register}>Register</a>
           </Button>
         </div>
 
@@ -81,10 +82,10 @@ export function SiteHeader() {
             ))}
             <div className="mt-2 grid grid-cols-2 gap-2 border-t border-white/[0.06] pt-4">
               <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
-                <a href="https://aff.daotra.io/login">Login</a>
+                <a href={portalUrls.login}>Login</a>
               </Button>
               <Button asChild variant="outline" size="md" onClick={() => setOpen(false)}>
-                <a href="https://aff.daotra.io/register">Register</a>
+                <a href={portalUrls.register}>Register</a>
               </Button>
             </div>
           </nav>

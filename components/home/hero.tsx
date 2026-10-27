@@ -1,11 +1,13 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InteractiveGlobe } from "@/components/home/interactive-globe";
+import { getPublisherPortalUrls } from "@/lib/portal-urls";
 
 // Color-coded via CSS custom properties (set in globals.css: --hero-accent-a /
 // --hero-accent-b) rather than hardcoded hex here, so the two headline rows
 // can be retinted from one place without touching this component.
 export function Hero() {
+  const portalUrls = getPublisherPortalUrls();
   return (
     <section className="relative overflow-hidden border-b border-white/[0.06]">
       <div className="pointer-events-none absolute inset-0 bg-grid bg-grid opacity-60" />
@@ -38,7 +40,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" variant="outline">
-              <a href="https://aff.daotra.io/register">
+              <a href={portalUrls.register}>
                 Join as Publisher <ArrowRight className="h-4 w-4" />
               </a>
             </Button>

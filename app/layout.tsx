@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { CookieBanner } from "@/components/consent/cookie-banner";
 import { robotsMeta } from "@/lib/seo";
+import { getPublisherPortalUrls } from "@/lib/portal-urls";
 
 // One humanist sans, everywhere - headings, body, labels, and buttons all
 // share this single typeface (Apple-style: one family, varied by weight/
@@ -92,7 +93,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <AuthProvider>
-          {!isPortalHost && <SiteHeader />}
+          {!isPortalHost && <SiteHeader portalUrls={getPublisherPortalUrls()} />}
           <main className="flex-1">{children}</main>
           {!isPortalHost && <SiteFooter />}
           {!isPortalHost && <CookieBanner />}
