@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { portalRegisterSchema } from "@/lib/validation/auth";
+import { portalRegisterSchema, publisherRegisterSchema } from "@/lib/validation/auth";
+import { getCountryName } from "@/lib/countries";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -19,6 +20,41 @@ export async function POST(req: NextRequest) {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  // Publishers submit the fuller registration form (aff.daotra.io/register);
+  // anything else goes through the original four-field application schema.
+  const isPublisher =
+    typeof body === "object" && body !== null && (body as { role?: unknown }).role === "publisher";
+
+  if (isPublisher) {
+    const parsed = publisherRegisterSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid submission.", issues: parsed.error.flatten() },
+        { status: 422 }
+      );
+    }
+
+    if (parsed.data.website) {
+      // Honeypot tripped - report success without recording anything.
+      return NextResponse.json({ ok: true });
+    }
+
+    // NOTE: no database or CRM is wired into this codebase yet, so a
+    // registration is only logged today (visible in the Worker's logs). Persist
+    // it here - and notify whoever reviews registrations - once the
+    // destination is chosen (Daotra's CRM/tracking platform, a DB table, an
+    // email/Telegram notification). Credentials are issued after approval;
+    // this route doesn't create an account.
+    const { website: _honeypot, country, telegram, ...rest } = parsed.data;
+    console.info("[register] new publisher registration", {
+      ...rest,
+      telegram: `@${telegram}`,
+      country: `${getCountryName(country)} (${country})`,
+    });
+
+    return NextResponse.json({ ok: true });
   }
 
   const parsed = portalRegisterSchema.safeParse(body);

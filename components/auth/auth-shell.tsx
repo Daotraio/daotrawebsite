@@ -6,18 +6,21 @@ export function AuthShell({
   description,
   children,
   footer,
+  wide = false,
 }: {
   title: string;
   description: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  /** Wider card for longer forms (e.g. the publisher registration form). */
+  wide?: boolean;
 }) {
   return (
     <div className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden py-16">
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-50" />
       <div className="pointer-events-none absolute inset-0 bg-radial-fade" />
 
-      <div className="relative w-full max-w-md px-4">
+      <div className={`relative w-full px-4 ${wide ? "max-w-2xl" : "max-w-md"}`}>
         <Link href="/" className="mb-8 flex items-center justify-center gap-2">
           <Orbit className="h-6 w-6 text-accent-silver" />
           <span className="font-display text-lg font-semibold tracking-tight">Daotra</span>
