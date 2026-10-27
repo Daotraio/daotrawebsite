@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     } = parsed.data;
     console.info("[register] new publisher registration", {
       ...rest,
-      telegram: `@${telegram}`,
+      telegram,
       country: `${getCountryName(country)} (${country})`,
     });
 

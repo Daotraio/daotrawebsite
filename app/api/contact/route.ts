@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     name,
     email,
     company,
-    telegram: `@${telegram}`,
+    telegram,
     messageLength: message.length,
   });
 

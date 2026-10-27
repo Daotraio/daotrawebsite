@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isCountryCode } from "@/lib/countries";
+import { telegramHandle } from "@/lib/validation/telegram";
 
 export const loginSchema = z.object({
   email: z.string().trim().email("Enter a valid email address"),
@@ -7,16 +8,6 @@ export const loginSchema = z.object({
   website: z.string().max(0).optional().or(z.literal("")), // honeypot
 });
 export type LoginValues = z.infer<typeof loginSchema>;
-
-// Telegram usernames: 5-32 characters, letters/numbers/underscores, must
-// start with a letter. Stored WITHOUT the leading "@" - the "@" is a fixed,
-// non-editable UI prefix (see TelegramInput), never part of the value itself.
-const telegramUsername = z
-  .string()
-  .trim()
-  .min(5, "Telegram usernames are at least 5 characters")
-  .max(32, "Telegram usernames are at most 32 characters")
-  .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, "Use only letters, numbers, and underscores, starting with a letter");
 
 // This is the full registration form as specified: an application/lead form
 // (no password here - credentials are issued after the application is
@@ -26,7 +17,7 @@ export const portalRegisterSchema = z.object({
   companyName: z.string().trim().min(2, "Enter your company name").max(160),
   fullName: z.string().trim().min(2, "Enter your full name").max(120),
   email: z.string().trim().email("Enter a valid email address"),
-  telegram: telegramUsername,
+  telegram: telegramHandle,
   agreeToTerms: z.literal(true, {
     errorMap: () => ({ message: "You must accept the Terms & Conditions and Privacy Policy" }),
   }),
@@ -53,7 +44,7 @@ export const publisherRegisterSchema = z.object({
     .or(z.literal("")),
   contactName: z.string().trim().min(2, "Enter the contact's name").max(120),
   email: z.string().trim().email("Enter a valid email address").max(200),
-  telegram: telegramUsername,
+  telegram: telegramHandle,
   teams: optionalText(200),
   legalName: z.string().trim().min(2, "Enter the legal name").max(200),
   registrationNumber: z.string().trim().min(2, "Enter the registration number").max(60),
