@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 // A Telegram handle as typed into the site's forms: it MUST start with "@",
-// then letters, numbers, and underscores in any order (a leading digit is
-// fine - only the "@" is required first). Telegram's own length rule is
-// 5-32 characters after the "@". The "@" is part of the stored value.
+// and after that anything goes - letters in any language, numbers, symbols,
+// in any order - except spaces/whitespace. 5-32 characters after the "@"
+// (Telegram's own length range). The "@" is part of the stored value.
 //
 // Checks run in this order and the form shows the first failure, so an empty
 // field says "Enter..." and a handle typed without "@" says to add one.
@@ -12,7 +12,7 @@ export const telegramHandle = z
   .trim()
   .min(1, "Enter your Telegram username")
   .regex(/^@/, "Telegram must start with @")
-  .regex(/^@[a-zA-Z0-9_]*$/, "After the @, use only letters, numbers, and underscores")
+  .regex(/^@\S*$/, "Telegram usernames can't contain spaces")
   .min(6, "Telegram usernames are at least 5 characters after the @")
   .max(33, "Telegram usernames are at most 32 characters after the @");
 
