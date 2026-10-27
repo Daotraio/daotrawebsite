@@ -9,6 +9,7 @@ import { Label, Input } from "@/components/ui/form-fields";
 import { TelegramInput } from "@/components/ui/telegram-input";
 import { CountrySelect } from "@/components/ui/country-select";
 import { Button } from "@/components/ui/button";
+import { ApplicationReceivedDialog } from "@/components/auth/application-received-dialog";
 
 // "*" marks the mandatory fields, as in the spec. aria-hidden because the
 // inputs themselves carry aria-required for assistive tech.
@@ -39,6 +40,7 @@ export function PublisherRegisterForm() {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<PublisherRegisterValues>({
     resolver: zodResolver(publisherRegisterSchema),
@@ -54,12 +56,15 @@ export function PublisherRegisterForm() {
       registrationNumber: "",
       country: "",
       address: "",
+      password: "",
+      confirmPassword: "",
       website: "",
     },
   });
 
   const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = React.useState("");
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   const onSubmit = async (values: PublisherRegisterValues) => {
     setStatus("idle");
@@ -79,7 +84,10 @@ export function PublisherRegisterForm() {
         setStatus("error");
         return;
       }
+      // Clear everything (including the typed passwords) out of form state.
+      reset();
       setStatus("success");
+      setDialogOpen(true);
     } catch {
       setErrorMessage("Network error. Please check your connection and try again.");
       setStatus("error");
@@ -88,11 +96,13 @@ export function PublisherRegisterForm() {
 
   if (status === "success") {
     return (
-      <p role="status" className="flex items-start gap-2 text-sm text-accent-silver">
-        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-        Registration received - we&rsquo;ll review it and get back to you, usually within hours, with
-        next steps for accessing your account.
-      </p>
+      <>
+        <p role="status" className="flex items-start gap-2 text-sm text-accent-silver">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+          Application received - your Affiliate Manager will contact you soon.
+        </p>
+        <ApplicationReceivedDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      </>
     );
   }
 
@@ -241,6 +251,46 @@ export function PublisherRegisterForm() {
             <FieldError message={errors.address?.message} />
           </div>
         </div>
+      </section>
+
+      <section className="space-y-5" aria-labelledby="pub-password-heading">
+        <div id="pub-password-heading">
+          <SectionHeading>Password</SectionHeading>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="pub-password">
+              Password
+              <Req />
+            </Label>
+            <Input
+              id="pub-password"
+              type="password"
+              aria-required="true"
+              autoComplete="new-password"
+              {...register("password")}
+            />
+            <FieldError message={errors.password?.message} />
+          </div>
+
+          <div>
+            <Label htmlFor="pub-confirmPassword">
+              Verify Password
+              <Req />
+            </Label>
+            <Input
+              id="pub-confirmPassword"
+              type="password"
+              aria-required="true"
+              autoComplete="new-password"
+              {...register("confirmPassword")}
+            />
+            <FieldError message={errors.confirmPassword?.message} />
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          At least 8 characters. You&rsquo;ll log in with your email and this password.
+        </p>
       </section>
 
       {status === "error" && (

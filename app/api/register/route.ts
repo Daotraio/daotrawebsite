@@ -45,9 +45,21 @@ export async function POST(req: NextRequest) {
     // registration is only logged today (visible in the Worker's logs). Persist
     // it here - and notify whoever reviews registrations - once the
     // destination is chosen (Daotra's CRM/tracking platform, a DB table, an
-    // email/Telegram notification). Credentials are issued after approval;
-    // this route doesn't create an account.
-    const { website: _honeypot, country, telegram, ...rest } = parsed.data;
+    // email/Telegram notification). This route doesn't create an account.
+    //
+    // PASSWORD: parsed.data.password is the applicant's chosen login
+    // password in plain text. When you persist this, hash it first
+    // (bcryptjs is already a dependency; lib/auth.ts compares with
+    // bcrypt.compare) and store only the hash. It must never be logged or
+    // stored as-is - it's deliberately left out of the log line below.
+    const {
+      website: _honeypot,
+      password: _password,
+      confirmPassword: _confirmPassword,
+      country,
+      telegram,
+      ...rest
+    } = parsed.data;
     console.info("[register] new publisher registration", {
       ...rest,
       telegram: `@${telegram}`,

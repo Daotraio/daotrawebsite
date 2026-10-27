@@ -60,6 +60,17 @@ export const publisherRegisterSchema = z.object({
   // ISO 3166-1 alpha-2 code (see lib/countries.ts).
   country: z.string().refine(isCountryCode, "Select a country"),
   address: optionalText(300),
+  // The publisher logs in later with email + this password. Max 72 because
+  // bcrypt (what the credentials login will use - see lib/auth.ts) silently
+  // ignores everything past 72 bytes; better to refuse than truncate.
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(72, "Password must be at most 72 characters"),
+  confirmPassword: z.string().min(1, "Verify your password"),
   website: z.string().max(0).optional().or(z.literal("")), // honeypot
+}).refine((v) => v.password === v.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 export type PublisherRegisterValues = z.infer<typeof publisherRegisterSchema>;
