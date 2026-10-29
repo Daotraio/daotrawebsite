@@ -15,7 +15,9 @@
 //                          without a matching secret.
 //
 // What it never does: log a request or response body (they carry passwords,
-// session tokens and personal data), follow a redirect, or cache.
+// session tokens and personal data) or follow a redirect. (Workers' fetch takes
+// only `follow` / `manual` redirects and no `cache` option — Node accepts both,
+// so the unit tests could not catch it; a redirect is treated as a failure.)
 
 if (typeof window !== "undefined") {
   throw new Error("lib/daotra-api is server-only");
@@ -78,8 +80,7 @@ export async function callDaotra(
       method: options.method ?? "GET",
       headers,
       body: options.json === undefined ? undefined : JSON.stringify(options.json),
-      cache: "no-store",
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
   } catch (error) {
@@ -87,6 +88,12 @@ export async function callDaotra(
     // The path and the error's kind only — never a body or a header.
     console.error("[daotra-api] request failed", { path, kind: (error as Error)?.name });
     throw new DaotraUnavailableError("Daotra API unreachable");
+  }
+
+  if (response.status >= 300 && response.status < 400) {
+    // Never followed: a credential must not travel to wherever a redirect points.
+    console.error("[daotra-api] unexpected redirect", { path, status: response.status });
+    throw new DaotraUnavailableError("Daotra API redirected");
   }
 
   let body: unknown = null;

@@ -89,6 +89,22 @@ function header(name: string): string | null {
   return new Headers(calls[0]!.init.headers).get(name);
 }
 
+describe("the Daotra API client", () => {
+  it("uses only fetch options a Cloudflare Worker supports", async () => {
+    reply = { status: 202, body: { status: "received" } };
+    await register(request("/api/register", form));
+    const init = calls[0]!.init;
+    expect(init.redirect).toBe("manual");
+    expect("cache" in init).toBe(false);
+  });
+
+  it("treats a redirect as unavailable and never follows it", async () => {
+    reply = { status: 302 };
+    const res = await register(request("/api/register", form));
+    expect(res.status).toBe(503);
+  });
+});
+
 describe("POST /api/register", () => {
   it("forwards every field under Daotra's names, with the gateway headers, and logs nothing", async () => {
     reply = { status: 202, body: { status: "received" } };
