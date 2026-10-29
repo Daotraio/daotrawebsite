@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/page-hero";
 import { LegalSection } from "@/components/legal/legal-section";
 import { robotsMeta } from "@/lib/seo";
+import { TERMS } from "@/lib/legal";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
   robots: robotsMeta,
 };
 
-const LAST_UPDATED = "August 30, 2026";
+// The version a registrant accepts is recorded from the same constant (lib/legal.ts).
+const LAST_UPDATED = TERMS.lastUpdated;
 
 export default function TermsPage() {
   return (
@@ -17,7 +19,7 @@ export default function TermsPage() {
       <PageHero
         eyebrow="Legal"
         title="Terms & Conditions"
-        description={`Last updated: ${LAST_UPDATED}. A plain-language summary of the terms governing use of Daotra's website and platform, including the Publisher and Advertiser portals.`}
+        description={`Last updated: ${LAST_UPDATED}. A plain-language summary of the terms governing use of Daotra's website and platform, including the Publisher portal.`}
       />
 
       <div className="container max-w-3xl py-4">
@@ -31,14 +33,14 @@ export default function TermsPage() {
 
         <LegalSection id="acceptance" title="1. Using the platform">
           <p>
-            By accessing or using daotra.io or the Publisher and Advertiser portals at
-            aff.daotra.io and adv.daotra.io (together, the &ldquo;Platform&rdquo;), you agree to
+            By accessing or using daotra.io or the Publisher portal at aff.daotra.io
+            (together, the &ldquo;Platform&rdquo;), you agree to
             these Terms and our Privacy Policy. If you don&apos;t agree, please don&apos;t use the
             Platform. You must be old enough to enter an agreement in your jurisdiction, and if
             you&apos;re acting for a company, you confirm you have the authority to accept these
-            Terms on its behalf. Registering on the Publisher or Advertiser portal submits an
-            application, not an automatic account - Daotra reviews and approves applications at
-            its discretion, and Advertisers in regulated verticals must hold the licenses required
+            Terms on its behalf. Registering on the Publisher portal opens a Publisher account in
+            a pending state, not an approval - Daotra reviews and approves Publishers at its
+            discretion, and Advertisers in regulated verticals must hold the licenses required
             to operate in each market they target.
           </p>
         </LegalSection>

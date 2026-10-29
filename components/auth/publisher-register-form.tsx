@@ -10,6 +10,7 @@ import { TelegramInput } from "@/components/ui/telegram-input";
 import { CountrySelect } from "@/components/ui/country-select";
 import { Button } from "@/components/ui/button";
 import { ApplicationReceivedDialog } from "@/components/auth/application-received-dialog";
+import { PRIVACY, TERMS } from "@/lib/legal";
 
 // "*" marks the mandatory fields, as in the spec. aria-hidden because the
 // inputs themselves carry aria-required for assistive tech.
@@ -35,17 +36,17 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function PublisherRegisterForm() {
+export function PublisherRegisterForm({ loginHref }: { loginHref: string }) {
   const {
     register,
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<PublisherRegisterValues>({
     resolver: zodResolver(publisherRegisterSchema),
     defaultValues: {
-      role: "publisher",
       name: "",
       affiliateManager: "",
       contactName: "",
@@ -68,11 +69,15 @@ export function PublisherRegisterForm() {
 
   const onSubmit = async (values: PublisherRegisterValues) => {
     setStatus("idle");
+    // Verify Password is checked above (the schema's refine) and is NEVER sent
+    // anywhere — not to this site's server, not to Daotra (BD-71 as amended).
+    const { confirmPassword: _verified, ...request } = values;
     try {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify(request),
+        credentials: "same-origin",
       });
       if (res.status === 429) {
         setErrorMessage("Too many attempts. Please wait a minute and try again.");
@@ -80,7 +85,20 @@ export function PublisherRegisterForm() {
         return;
       }
       if (!res.ok) {
-        setErrorMessage("We couldn't submit your registration. Please try again.");
+        const body = (await res.json().catch(() => null)) as
+          | { error?: string; field?: string; message?: string }
+          | null;
+        if (body?.error === "publisher_name_taken") {
+          setError("name", { message: body.message ?? "This name is already registered." }, { shouldFocus: true });
+          setErrorMessage("Choose a different name and submit again.");
+        } else if (body?.error === "country_invalid") {
+          setError("country", { message: body.message ?? "Select a valid country." }, { shouldFocus: true });
+          setErrorMessage("Select a valid country and submit again.");
+        } else if (res.status === 503 || res.status === 502) {
+          setErrorMessage("Registration is temporarily unavailable. Please try again shortly.");
+        } else {
+          setErrorMessage("We couldn't submit your registration. Please check the form and try again.");
+        }
         setStatus("error");
         return;
       }
@@ -99,9 +117,20 @@ export function PublisherRegisterForm() {
       <>
         <p role="status" className="flex items-start gap-2 text-sm text-accent-silver">
           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-          Application received - your Affiliate Manager will contact you soon.
+          <span>
+            Registration received. If this email address isn&rsquo;t already registered, your Publisher
+            account has been created &mdash;{" "}
+            <a href={loginHref} className="text-accent-silver hover:underline">
+              log in
+            </a>{" "}
+            with your email and password.
+          </span>
         </p>
-        <ApplicationReceivedDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+        <ApplicationReceivedDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          loginHref={loginHref}
+        />
       </>
     );
   }
@@ -206,7 +235,7 @@ export function PublisherRegisterForm() {
           </div>
 
           <p className="text-xs text-muted-foreground sm:col-span-2">
-            At least 8 characters. You&rsquo;ll log in with your email and this password.
+            At least 12 characters. You&rsquo;ll log in with your email and this password.
           </p>
 
           <div>
@@ -294,33 +323,36 @@ export function PublisherRegisterForm() {
       )}
 
       <div className="space-y-4">
+        <div>
+          <label htmlFor="pub-acceptTerms" className="flex items-start gap-2 text-sm text-muted-foreground">
+            <input
+              id="pub-acceptTerms"
+              type="checkbox"
+              aria-required="true"
+              aria-invalid={Boolean(errors.acceptTerms) || undefined}
+              className="mt-0.5 accent-accent-silver"
+              {...register("acceptTerms")}
+            />
+            <span>
+              I have read and accept the{" "}
+              <a href={TERMS.href} target="_blank" rel="noopener noreferrer" className="text-accent-silver hover:underline">
+                Terms &amp; Conditions
+              </a>{" "}
+              and the{" "}
+              <a href={PRIVACY.href} target="_blank" rel="noopener noreferrer" className="text-accent-silver hover:underline">
+                Privacy Policy
+              </a>
+              .<Req />
+            </span>
+          </label>
+          <FieldError message={errors.acceptTerms?.message} />
+        </div>
         <div className="flex justify-center">
           <Button type="submit" size="md" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {isSubmitting ? "Submitting…" : "Register"}
           </Button>
         </div>
-        <p className="text-center text-xs text-muted-foreground">
-          By registering you agree to our{" "}
-          <a
-            href="https://daotra.io/terms"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent-silver hover:underline"
-          >
-            Terms &amp; Conditions
-          </a>{" "}
-          and{" "}
-          <a
-            href="https://daotra.io/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent-silver hover:underline"
-          >
-            Privacy Policy
-          </a>
-          .
-        </p>
       </div>
     </form>
   );

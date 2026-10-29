@@ -120,7 +120,7 @@ http://localhost:3000
 
 That's the live site, running on your own computer. Click around — the
 navigation, the globe, the forms all work. **Note:** buttons that go to
-`aff.daotra.io` or `adv.daotra.io` (like "Publisher Login") won't load,
+`aff.daotra.io` (like "Publisher Login") won't load,
 since those subdomains only exist once the site is deployed to Cloudflare —
 see the main `README.md` for that step.
 
@@ -256,7 +256,7 @@ npm run deploy:production
 
 This deploys to the `daotra` Worker. It won't be reachable at `daotra.io`
 yet until you also do the one-time domain setup in `README.md` under
-"Pointing daotra.io (and the aff./adv. portals) at production" — that part
+"Pointing daotra.io (and the aff. Publisher portal) at production" — that part
 is a few clicks in the Cloudflare dashboard, not a terminal command.
 
 ### After this one-time setup

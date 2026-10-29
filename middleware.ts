@@ -1,35 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 
 /**
  * Subdomain routing:
- *   aff.daotra.io/*  -> internally served from /portal/publisher/*
- *   adv.daotra.io/*  -> internally served from /portal/advertiser/*
+ *   aff.daotra.io/*  -> internally served from /portal/publisher/* (the Publisher
+ *                       portal's official hostname — Daotra BD-40 as amended)
+ *   adv.daotra.io/*  -> redirected to the public Advertisers page: the Advertiser
+ *                       portal is cancelled (BD-40 as amended 2026-10-29); this
+ *                       only catches a stale link while the custom domain exists
  *   daotra.io/*       -> untouched (the marketing site in app/*)
  *
- * This is the standard Next.js "multi-tenant subdomain" middleware pattern:
- * one deployed app, host-based rewrite. On Cloudflare, aff.daotra.io and
- * adv.daotra.io both need to be added as Custom Domains pointing at the same
- * Worker (see README) - this file is what makes a single Worker able to
- * serve three different hostnames correctly.
+ * The standard Next.js "multi-tenant subdomain" pattern: one deployed app,
+ * host-based rewrite. On Cloudflare, aff.daotra.io is a Custom Domain pointing
+ * at the same Worker (see README).
  *
- * /register and /login are public on each subdomain; everything else under
- * a subdomain is a dashboard route and requires a session whose role matches
- * that subdomain.
+ * /register and /login (with everything under /login/ — forgot password and the
+ * reset-password page) are public on aff. Any other Publisher path needs the
+ * session cookie, or it goes to /login. This is a fast redirect, not the
+ * authentication check: the portal layout asks Daotra whether the session is
+ * live on every request (lib/portal-session.ts).
  */
-export async function middleware(req: NextRequest) {
+const SESSION_COOKIES = ["__Host-daotra_portal", "daotra_portal"];
+
+/**
+ * Set on requests for /portal/* pages served WITHOUT a portal subdomain (the
+ * staging workers.dev host, local dev), so the root layout leaves out the
+ * marketing header and footer there too. Always overwritten here: a value the
+ * client sends is never passed through.
+ */
+const PORTAL_ROUTE_HEADER = "x-daotra-portal-route";
+
+export function middleware(req: NextRequest) {
   const host = req.headers.get("host") ?? "";
   const { pathname } = req.nextUrl;
 
-  const isPublisherPortal = host.startsWith("aff.");
-  const isAdvertiserPortal = host.startsWith("adv.");
+  if (host.startsWith("adv.")) {
+    return NextResponse.redirect("https://daotra.io/advertisers", 308);
+  }
 
-  if (!isPublisherPortal && !isAdvertiserPortal) {
+  const isPublisherPortal = host.startsWith("aff.");
+
+  // The policies a registrant accepts, served from the same deployment that
+  // records their version (lib/legal.ts) — public, never rewritten into the portal.
+  if (isPublisherPortal && (pathname === "/terms" || pathname === "/privacy")) {
     return NextResponse.next();
   }
 
-  const role: "publisher" | "advertiser" = isPublisherPortal ? "publisher" : "advertiser";
-  const portalSegment = isPublisherPortal ? "publisher" : "advertiser";
+  if (!isPublisherPortal) {
+    const headers = new Headers(req.headers);
+    if (pathname.startsWith("/portal/")) headers.set(PORTAL_ROUTE_HEADER, "1");
+    else headers.delete(PORTAL_ROUTE_HEADER);
+    return NextResponse.next({ request: { headers } });
+  }
 
   const isPublicPortalPath =
     pathname === "/login" ||
@@ -38,30 +59,15 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/register/");
 
   if (!isPublicPortalPath) {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
-    if (!token) {
+    const hasSession = SESSION_COOKIES.some((name) => Boolean(req.cookies.get(name)?.value));
+    if (!hasSession) {
       const loginUrl = new URL("/login", req.url); // req.url preserves the subdomain host
-      loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
-    }
-
-    if (token.role !== role) {
-      // Signed in, but on the wrong portal for their account type (e.g. an
-      // advertiser hitting aff.daotra.io) - bounce to their own portal
-      // rather than showing a confusing 403.
-      const correctHost = isPublisherPortal
-        ? host.replace(/^aff\./, "adv.")
-        : host.replace(/^adv\./, "aff.");
-      const redirectUrl = new URL(req.url);
-      redirectUrl.host = correctHost;
-      redirectUrl.pathname = "/";
-      return NextResponse.redirect(redirectUrl);
     }
   }
 
   const url = req.nextUrl.clone();
-  url.pathname = `/portal/${portalSegment}${pathname === "/" ? "" : pathname}`;
+  url.pathname = `/portal/publisher${pathname === "/" ? "" : pathname}`;
   return NextResponse.rewrite(url);
 }
 

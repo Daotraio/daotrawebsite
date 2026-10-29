@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Loader2, AlertCircle } from "lucide-react";
 import { loginSchema, type LoginValues } from "@/lib/validation/auth";
@@ -11,37 +10,52 @@ import { Label, Input } from "@/components/ui/form-fields";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export function LoginForm() {
+// Publisher sign-in. Posts to this site's own /api/portal/login, which calls
+// Daotra and sets the HttpOnly session cookie — the session token never reaches
+// this component. Every refusal reads the same, by design.
+export function LoginForm({ homeHref, forgotHref }: { homeHref: string; forgotHref: string }) {
   const router = useRouter();
   const [formError, setFormError] = React.useState<string>("");
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { website: "" },
+    defaultValues: { email: "", password: "", website: "" },
   });
 
   const onSubmit = async (values: LoginValues) => {
     setFormError("");
     if (values.website) return; // honeypot tripped, silently drop
 
-    const result = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false,
-    });
-
-    if (result?.error) {
-      setFormError("Incorrect email or password.");
+    let res: Response;
+    try {
+      res = await fetch("/api/portal/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: values.email, password: values.password }),
+        credentials: "same-origin",
+      });
+    } catch {
+      setFormError("Network error. Please check your connection and try again.");
       return;
     }
-    // Each portal (aff./adv.) only ever links to its own login page, so a
-    // successful sign-in just goes to the dashboard root on the same
-    // subdomain - middleware.ts has already confirmed the role matches.
-    router.push("/");
-    router.refresh();
+
+    if (res.ok) {
+      router.replace(homeHref);
+      router.refresh();
+      return;
+    }
+    resetField("password");
+    if (res.status === 429) {
+      setFormError("Too many attempts. Please wait a minute and try again.");
+    } else if (res.status === 401) {
+      setFormError("Incorrect email or password.");
+    } else {
+      setFormError("Sign-in is temporarily unavailable. Please try again shortly.");
+    }
   };
 
   return (
@@ -60,7 +74,7 @@ export function LoginForm() {
       <div>
         <div className="flex items-center justify-between">
           <Label htmlFor="password">Password</Label>
-          <Link href="/login/forgot-password" className="text-xs text-accent-silver hover:underline">
+          <Link href={forgotHref} className="text-xs text-accent-silver hover:underline">
             Forgot password?
           </Link>
         </div>
@@ -69,7 +83,7 @@ export function LoginForm() {
       </div>
 
       {formError && (
-        <p className="flex items-center gap-2 text-sm text-destructive">
+        <p role="alert" className="flex items-center gap-2 text-sm text-destructive">
           <AlertCircle className="h-4 w-4" /> {formError}
         </p>
       )}

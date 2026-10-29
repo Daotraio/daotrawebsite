@@ -3,33 +3,43 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
-import { Menu, X, Orbit, LogOut, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Menu, X, Orbit } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SignOutButton } from "@/components/dashboard/sign-out-button";
+
+// Icons by name: a server layout passes these props, and a component function
+// cannot cross from a Server Component into a Client Component.
+const ICONS = { overview: LayoutDashboard } as const;
 
 export interface DashboardNavItem {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: keyof typeof ICONS;
 }
 
+// The signed-in account is passed in by the server layout, which asked Daotra
+// (`GET /portal/me`) — this client component holds no session of its own.
 export function DashboardShell({
   roleLabel,
   navItems,
+  account,
+  loginHref,
   children,
 }: {
   roleLabel: string;
   navItems: DashboardNavItem[];
+  account: { email: string; name: string };
+  loginHref: string;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const nav = (
     <nav className="flex flex-1 flex-col gap-1 px-3">
       {navItems.map((item) => {
         const active = pathname === item.href;
+        const Icon = ICONS[item.icon];
         return (
           <Link
             key={item.href}
@@ -40,7 +50,7 @@ export function DashboardShell({
               active && "bg-white/[0.06] text-accent-silver"
             )}
           >
-            <item.icon className="h-4 w-4" />
+            <Icon className="h-4 w-4" />
             {item.label}
           </Link>
         );
@@ -58,13 +68,7 @@ export function DashboardShell({
         </Link>
         {nav}
         <div className="mt-auto px-3 pt-6">
-          <button
-            onClick={() => signOut({ callbackUrl: "https://daotra.io" })}
-            className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-white/[0.05] hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </button>
+          <SignOutButton loginHref={loginHref} />
         </div>
       </aside>
 
@@ -82,11 +86,12 @@ export function DashboardShell({
             <p className="text-xs uppercase tracking-widest text-muted-foreground">{roleLabel}</p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-muted-foreground sm:inline">
-              {session?.user?.email ?? "Not signed in"}
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-accent-graphite to-accent-silver text-sm font-semibold text-obsidian-950">
-              {(session?.user?.name ?? "?").charAt(0).toUpperCase()}
+            <span className="hidden text-sm text-muted-foreground sm:inline">{account.email}</span>
+            <div
+              aria-hidden="true"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-accent-graphite to-accent-silver text-sm font-semibold text-obsidian-950"
+            >
+              {(account.name || account.email || "?").charAt(0).toUpperCase()}
             </div>
           </div>
         </header>
@@ -96,13 +101,7 @@ export function DashboardShell({
           <div className="border-b border-white/[0.06] bg-obsidian-950 py-4 md:hidden">
             {nav}
             <div className="px-3 pt-4">
-              <button
-                onClick={() => signOut({ callbackUrl: "https://daotra.io" })}
-                className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-white/[0.05] hover:text-foreground"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign out
-              </button>
+              <SignOutButton loginHref={loginHref} />
             </div>
           </div>
         )}

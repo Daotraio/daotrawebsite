@@ -1,9 +1,9 @@
-# Copy to .dev.vars for local `wrangler dev` / `next dev` runs.
-# In production, set the same keys with: npx wrangler secret put VAR_NAME
+# Copy to .dev.vars for local `wrangler dev` / preview runs.
+# In production, set the same keys with: npx wrangler secret put VAR_NAME --env=<name>
 # (never commit real values of this file - .dev.vars is gitignored)
 
-NEXTAUTH_SECRET=replace-with-a-32-byte-random-string
-DATABASE_URL=
+DAOTRA_API_BASE_URL=http://127.0.0.1:8010
+DAOTRA_WEBSITE_GATEWAY_SECRET=
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=

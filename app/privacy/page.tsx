@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/page-hero";
 import { LegalSection } from "@/components/legal/legal-section";
 import { robotsMeta } from "@/lib/seo";
+import { PRIVACY } from "@/lib/legal";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
   robots: robotsMeta,
 };
 
-const LAST_UPDATED = "August 30, 2026";
+// The version a registrant accepts is recorded from the same constant (lib/legal.ts).
+const LAST_UPDATED = PRIVACY.lastUpdated;
 
 export default function PrivacyPage() {
   return (
@@ -17,7 +19,7 @@ export default function PrivacyPage() {
       <PageHero
         eyebrow="Legal"
         title="Privacy Policy"
-        description={`Last updated: ${LAST_UPDATED}. A plain-language summary of how Daotra collects, uses, and protects personal data across daotra.io and the Publisher and Advertiser portals.`}
+        description={`Last updated: ${LAST_UPDATED}. A plain-language summary of how Daotra collects, uses, and protects personal data across daotra.io and the Publisher portal.`}
       />
 
       <div className="container max-w-3xl py-4">
@@ -31,7 +33,7 @@ export default function PrivacyPage() {
         <LegalSection id="overview" title="1. Overview">
           <p>
             This Policy covers the personal data Daotra (&ldquo;we,&rdquo; &ldquo;us&rdquo;)
-            handles through daotra.io, aff.daotra.io, and adv.daotra.io (together, the
+            handles through daotra.io and aff.daotra.io (together, the
             &ldquo;Platform&rdquo;), for Publishers, Advertisers, and website visitors. It doesn&apos;t
             cover the privacy practices of the third-party operators that Publishers promote -
             those are governed by each operator&apos;s own policy. Cookie use is covered separately

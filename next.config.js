@@ -55,7 +55,8 @@ const nextConfig = {
     return [
       // Convenience aliases straight to the correct portal subdomain.
       { source: "/publishers/apply", destination: "https://aff.daotra.io/register", permanent: false },
-      { source: "/advertisers/apply", destination: "https://adv.daotra.io/register", permanent: false },
+      // The Advertiser portal is cancelled (BD-40 as amended): Advertisers contact Daotra.
+      { source: "/advertisers/apply", destination: "/advertisers", permanent: false },
       { source: "/signin", destination: "/login", permanent: true },
       { source: "/signup", destination: "/register", permanent: true },
     ];

@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { AuthProvider } from "@/components/providers/auth-provider";
 import { CookieBanner } from "@/components/consent/cookie-banner";
 import { robotsMeta } from "@/lib/seo";
 import { getPublisherPortalUrls } from "@/lib/portal-urls";
@@ -76,14 +75,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // aff.daotra.io and adv.daotra.io render their own chrome (AuthShell for
+  // aff.daotra.io renders its own chrome (AuthShell for
   // login/register, DashboardShell for the dashboard routes) - the marketing
   // header/footer only belongs on the apex site. Checked server-side via the
   // Host header so there's no client-side flash of the marketing nav.
   // headers() is async as of Next.js 15 - must be awaited.
   const headersList = await headers();
   const host = headersList.get("host") ?? "";
-  const isPortalHost = host.startsWith("aff.") || host.startsWith("adv.");
+  // `x-daotra-portal-route` is set (and only ever set) by middleware.ts, for
+  // /portal/* pages on a host without the portal subdomain (staging, local).
+  const isPortalHost =
+    host.startsWith("aff.") ||
+    headersList.get("x-daotra-portal-route") === "1";
 
   return (
     <html lang="en" className={sans.variable}>
@@ -92,12 +95,10 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-        <AuthProvider>
-          {!isPortalHost && <SiteHeader portalUrls={getPublisherPortalUrls()} />}
-          <main className="flex-1">{children}</main>
-          {!isPortalHost && <SiteFooter />}
-          {!isPortalHost && <CookieBanner />}
-        </AuthProvider>
+        {!isPortalHost && <SiteHeader portalUrls={getPublisherPortalUrls()} />}
+        <main className="flex-1">{children}</main>
+        {!isPortalHost && <SiteFooter />}
+        {!isPortalHost && <CookieBanner />}
       </body>
     </html>
   );

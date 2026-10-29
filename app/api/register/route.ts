@@ -1,97 +1,83 @@
 import { NextRequest, NextResponse } from "next/server";
-import { portalRegisterSchema, publisherRegisterSchema } from "@/lib/validation/auth";
-import { getCountryName } from "@/lib/countries";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { callDaotra, DaotraUnavailableError, errorCode } from "@/lib/daotra-api";
+import { rateLimit } from "@/lib/rate-limit";
+import { clientIp, isSameOrigin } from "@/lib/request-guards";
+import { publisherRegisterRequestSchema, toDaotraRegistration } from "@/lib/validation/auth";
 
 export const runtime = "nodejs";
 
+const NO_STORE = { "Cache-Control": "no-store" };
+
+function reply(status: number, body: Record<string, unknown>) {
+  return NextResponse.json(body, { status, headers: NO_STORE });
+}
+
+// Publisher registration (BD-71 as amended 2026-10-29): the form's fields go to
+// Daotra, which creates the Publisher in Pending and its login, atomically.
+// Nothing is stored here and NOTHING IS LOGGED — the body holds a password and
+// the registrant's personal data. Advertisers never self-register (BD-66), so
+// this route accepts the Publisher form only.
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req.headers);
-  const { success: withinLimit } = await rateLimit(`register:${ip}`, 5, 60_000);
+  if (!isSameOrigin(req)) return reply(403, { error: "forbidden" });
+
+  const ip = clientIp(req.headers);
+  const { success: withinLimit } = await rateLimit(`register:${ip ?? "unknown"}`, 5, 60_000);
   if (!withinLimit) {
-    return NextResponse.json(
-      { error: "Too many attempts. Please try again in a minute." },
-      { status: 429 }
-    );
+    return reply(429, { error: "rate_limited", message: "Too many attempts. Please try again in a minute." });
   }
 
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return reply(400, { error: "invalid_request" });
   }
 
-  // Publishers submit the fuller registration form (aff.daotra.io/register);
-  // anything else goes through the original four-field application schema.
-  const isPublisher =
-    typeof body === "object" && body !== null && (body as { role?: unknown }).role === "publisher";
-
-  if (isPublisher) {
-    const parsed = publisherRegisterSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Invalid submission.", issues: parsed.error.flatten() },
-        { status: 422 }
-      );
-    }
-
-    if (parsed.data.website) {
-      // Honeypot tripped - report success without recording anything.
-      return NextResponse.json({ ok: true });
-    }
-
-    // NOTE: no database or CRM is wired into this codebase yet, so a
-    // registration is only logged today (visible in the Worker's logs). Persist
-    // it here - and notify whoever reviews registrations - once the
-    // destination is chosen (Daotra's CRM/tracking platform, a DB table, an
-    // email/Telegram notification). This route doesn't create an account.
-    //
-    // PASSWORD: parsed.data.password is the applicant's chosen login
-    // password in plain text. When you persist this, hash it first
-    // (bcryptjs is already a dependency; lib/auth.ts compares with
-    // bcrypt.compare) and store only the hash. It must never be logged or
-    // stored as-is - it's deliberately left out of the log line below.
-    const {
-      website: _honeypot,
-      password: _password,
-      confirmPassword: _confirmPassword,
-      country,
-      telegram,
-      ...rest
-    } = parsed.data;
-    console.info("[register] new publisher registration", {
-      ...rest,
-      telegram,
-      country: `${getCountryName(country)} (${country})`,
-    });
-
-    return NextResponse.json({ ok: true });
-  }
-
-  const parsed = portalRegisterSchema.safeParse(body);
+  const parsed = publisherRegisterRequestSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid submission.", issues: parsed.error.flatten() },
-      { status: 422 }
-    );
+    // Field names and messages only — never the submitted values.
+    return reply(422, { error: "invalid_submission", fields: parsed.error.flatten().fieldErrors });
   }
-
   if (parsed.data.website) {
-    // Honeypot tripped - report success without recording anything.
-    return NextResponse.json({ ok: true });
+    // Honeypot tripped: answer as a registration would, record nothing.
+    return reply(200, { ok: true });
   }
 
-  // NOTE: no database is wired into this codebase (see .env.example -
-  // DATABASE_URL). Persist the application here once you've picked a
-  // provider, e.g.:
-  //   await db.applications.create({ data: { ...parsed.data, status: "pending" } })
-  // and trigger your approval workflow (email/Telegram notification to the
-  // ops team, a review queue in an internal tool, etc). Once approved, the
-  // applicant needs an actual account + password created - this route only
-  // captures the application today.
-  const { role, companyName, fullName, email, telegram } = parsed.data;
-  console.info("[register] new application", { role, companyName, fullName, email, telegram });
+  let result;
+  try {
+    result = await callDaotra("/public/publisher-registrations", {
+      method: "POST",
+      json: toDaotraRegistration(parsed.data),
+      clientIp: ip,
+    });
+  } catch (error) {
+    if (error instanceof DaotraUnavailableError) {
+      return reply(503, { error: "unavailable", message: "Registration is temporarily unavailable." });
+    }
+    throw error;
+  }
 
-  return NextResponse.json({ ok: true });
+  const code = errorCode(result.body);
+  if (result.status === 202) {
+    // The same answer whether or not the email already held an account —
+    // Daotra does not say, and neither do we.
+    return reply(200, { ok: true });
+  }
+  if (result.status === 409 && code === "publisher_name_taken") {
+    return reply(409, {
+      error: code,
+      field: "name",
+      message: "This Publisher name is already registered. Choose a different name.",
+    });
+  }
+  if (result.status === 422 && code === "country_invalid") {
+    return reply(422, { error: code, field: "country", message: "Select a valid country." });
+  }
+  if (result.status === 429) {
+    return reply(429, { error: "rate_limited", message: "Too many attempts. Please try again later." });
+  }
+  if (result.status === 422) {
+    return reply(422, { error: "invalid_submission" });
+  }
+  return reply(502, { error: "unavailable", message: "Registration is temporarily unavailable." });
 }

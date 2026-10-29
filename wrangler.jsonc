@@ -29,7 +29,7 @@
     "production": {
       "name": "daotra",
       // workers_dev is left off here on purpose - production is reached
-      // only via the real Custom Domains (daotra.io, aff., adv.) added in
+      // only via the real Custom Domains (daotra.io, aff.) added in
       // the Cloudflare dashboard, not a workers.dev URL.
       "vars": { "APP_ENV": "production" },
       "assets": {

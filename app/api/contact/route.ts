@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { contactFormSchema } from "@/lib/validation/contact";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { rateLimit } from "@/lib/rate-limit";
+import { clientIp } from "@/lib/request-guards";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req.headers);
+  const ip = clientIp(req.headers) ?? "unknown";
   const { success: withinLimit } = await rateLimit(`contact:${ip}`, 5, 60_000);
   if (!withinLimit) {
     return NextResponse.json(

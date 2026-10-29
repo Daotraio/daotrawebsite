@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { AuthShell } from "@/components/auth/auth-shell";
-import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+import { ForgotPasswordNotice } from "@/components/auth/forgot-password-form";
+import { publisherPortalPaths } from "@/lib/portal-paths";
 
 export const metadata: Metadata = { title: "Reset password", robots: { index: false, follow: false } };
 
-export default function PublisherForgotPasswordPage() {
+export default async function PublisherForgotPasswordPage() {
+  const paths = publisherPortalPaths((await headers()).get("host"));
   return (
-    <AuthShell title="Reset your password" description="Enter your account email and we'll send a reset link.">
-      <ForgotPasswordForm />
+    <AuthShell title="Forgot your password?" description="Password resets are handled by your Daotra contact.">
+      <ForgotPasswordNotice loginHref={paths.login} />
     </AuthShell>
   );
 }

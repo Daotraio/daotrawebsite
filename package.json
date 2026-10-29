@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview --env=staging",
     "deploy:staging": "opennextjs-cloudflare build && opennextjs-cloudflare deploy --env=staging",
     "deploy:production": "opennextjs-cloudflare build && opennextjs-cloudflare deploy --env=production",
@@ -22,13 +23,11 @@
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.34.0",
     "autoprefixer": "^10.4.19",
-    "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "globe.gl": "^2.46.1",
     "lucide-react": "^0.427.0",
     "next": "^16.4.3",
-    "next-auth": "^4.24.11",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -44,11 +43,11 @@
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.13",
-    "@types/bcryptjs": "^2.4.6",
     "@types/three": "^0.180.0",
     "@types/topojson-client": "^3.1.5",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.3",
+    "vitest": "^3.2.4",
     "wrangler": "^4.152.0"
   }
 }

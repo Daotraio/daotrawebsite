@@ -4,15 +4,20 @@ import * as React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Confirmation popup shown after a successful registration. Built on the
+// Confirmation popup shown after a registration is accepted. Its wording is
+// true whether or not the email already held an account: Daotra answers both
+// the same way, so the form cannot be used to find out which emails are
+// registered. Built on the
 // native <dialog> element: showModal() gives us the focus trap, Esc-to-close,
 // inert page behind it, and a top-layer backdrop for free.
 export function ApplicationReceivedDialog({
   open,
   onClose,
+  loginHref,
 }: {
   open: boolean;
   onClose: () => void;
+  loginHref: string;
 }) {
   const ref = React.useRef<HTMLDialogElement>(null);
 
@@ -45,16 +50,21 @@ export function ApplicationReceivedDialog({
           id="application-received-title"
           className="mt-5 font-display text-xl font-semibold text-foreground"
         >
-          Application received
+          Registration received
         </h2>
         <p id="application-received-body" className="mt-2 text-sm text-muted-foreground">
-          Thank you for registering with Daotra. Your Affiliate Manager will contact you soon.
+          Thank you for registering with Daotra. If this email address isn&rsquo;t already
+          registered, your Publisher account has been created and you can log in now with your
+          email and password. Daotra will be in touch to complete your onboarding.
         </p>
+        <Button asChild size="lg" className="mt-7 w-full">
+          <a href={loginHref}>Log in</a>
+        </Button>
         <Button
           type="button"
           variant="outline"
           size="lg"
-          className="mt-7 w-full"
+          className="mt-3 w-full"
           onClick={() => ref.current?.close()}
         >
           Done
