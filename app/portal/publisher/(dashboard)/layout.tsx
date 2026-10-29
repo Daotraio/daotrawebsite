@@ -26,9 +26,16 @@ export default async function PublisherDashboardLayout({ children }: { children:
   const identity = await currentPortalIdentity();
   if (!identity) redirect(paths.login);
 
-  // Only what exists today. The dashboard, Deal Groups and Postbacks Log
-  // screens follow their own specifications.
+  // The three business screens (Daotra BD-91), then the account's own page.
   const navigation: PortalNavSection[] = [
+    {
+      title: "Performance",
+      areas: [
+        { href: paths.dashboard, label: "Dashboard", icon: "dashboard" },
+        { href: paths.dealGroups, label: "Deal Groups", icon: "dealGroups" },
+        { href: paths.postbacks, label: "Postbacks Log", icon: "postbacks" },
+      ],
+    },
     { title: "Account", areas: [{ href: paths.home, label: "Overview", icon: "overview" }] },
   ];
 

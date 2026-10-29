@@ -11,9 +11,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, ChevronRight, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Layers, LayoutDashboard, LogOut, Menu, Send, UserRound, X } from "lucide-react";
 
-const ICONS = { overview: LayoutDashboard } as const;
+const ICONS = { dashboard: LayoutDashboard, dealGroups: Layers, postbacks: Send, overview: UserRound } as const;
 
 export interface PortalNavArea {
   href: string;

@@ -20,7 +20,10 @@
       // site you do. APP_ENV=staging keeps it out of search results
       // (see lib/seo.ts), but doesn't restrict who can open the link.
       "workers_dev": true,
-      "vars": { "APP_ENV": "staging" },
+      // DAOTRA_TRACKING_BASE_URL: the Staging tracking service's public https origin, shown
+      // before each /c/{public_id} on the portal's Deal Groups page (Daotra BD-91). Not a
+      // secret. Production sets its own when the portal ships there.
+      "vars": { "APP_ENV": "staging", "DAOTRA_TRACKING_BASE_URL": "https://staging-track.daotra.io" },
       "assets": {
         "directory": ".open-next/assets",
         "binding": "ASSETS"

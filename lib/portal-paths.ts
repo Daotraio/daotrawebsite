@@ -10,6 +10,10 @@ export interface PublisherPortalPaths {
   login: string;
   register: string;
   forgotPassword: string;
+  /** The business screens (Daotra BD-91). */
+  dashboard: string;
+  dealGroups: string;
+  postbacks: string;
 }
 
 export function publisherPortalPaths(host: string | null | undefined): PublisherPortalPaths {
@@ -19,5 +23,8 @@ export function publisherPortalPaths(host: string | null | undefined): Publisher
     login: `${base}/login`,
     register: `${base}/register`,
     forgotPassword: `${base}/login/forgot-password`,
+    dashboard: `${base}/dashboard`,
+    dealGroups: `${base}/deal-groups`,
+    postbacks: `${base}/postbacks`,
   };
 }

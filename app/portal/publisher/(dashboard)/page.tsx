@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 // The authenticated landing page: who is signed in, from Daotra's own answer
 // (`GET /portal/me` — this Publisher's data and nothing else). The business
-// screens follow their own specifications.
+// screens — Dashboard, Deal Groups, Postbacks Log — are beside it (Daotra BD-91).
 export default async function PublisherOverviewPage() {
   const identity = await currentPortalIdentity();
   if (!identity) redirect(publisherPortalPaths((await headers()).get("host")).login);

@@ -15,7 +15,8 @@
 //                          without a matching secret.
 //
 // What it never does: log a request or response body (they carry passwords,
-// session tokens and personal data) or follow a redirect. (Workers' fetch takes
+// session tokens and personal data), log a query string (a portal read's filters are
+// the Publisher's data), or follow a redirect. (Workers' fetch takes
 // only `follow` / `manual` redirects and no `cache` option — Node accepts both,
 // so the unit tests could not catch it; a redirect is treated as a failure.)
 
@@ -54,6 +55,9 @@ function baseUrl(): string {
   return url.toString().replace(/\/+$/, "");
 }
 
+/** A path as it may be logged: never its query string. */
+const loggable = (path: string): string => path.split("?")[0] ?? path;
+
 export async function callDaotra(
   path: `/${string}`,
   options: {
@@ -86,13 +90,13 @@ export async function callDaotra(
   } catch (error) {
     if (error instanceof DaotraUnavailableError) throw error;
     // The path and the error's kind only — never a body or a header.
-    console.error("[daotra-api] request failed", { path, kind: (error as Error)?.name });
+    console.error("[daotra-api] request failed", { path: loggable(path), kind: (error as Error)?.name });
     throw new DaotraUnavailableError("Daotra API unreachable");
   }
 
   if (response.status >= 300 && response.status < 400) {
     // Never followed: a credential must not travel to wherever a redirect points.
-    console.error("[daotra-api] unexpected redirect", { path, status: response.status });
+    console.error("[daotra-api] unexpected redirect", { path: loggable(path), status: response.status });
     throw new DaotraUnavailableError("Daotra API redirected");
   }
 
@@ -106,7 +110,7 @@ export async function callDaotra(
     }
   }
   if (response.status >= 500) {
-    console.error("[daotra-api] upstream error", { path, status: response.status });
+    console.error("[daotra-api] upstream error", { path: loggable(path), status: response.status });
   }
   return { status: response.status, body };
 }
