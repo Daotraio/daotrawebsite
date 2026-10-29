@@ -1,6 +1,10 @@
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
+import "@/components/portal/portal.css";
+
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { DashboardShell, type DashboardNavItem } from "@/components/dashboard/dashboard-shell";
+import { PortalShell, type PortalNavSection } from "@/components/portal/portal-shell";
 import { publisherPortalPaths } from "@/lib/portal-paths";
 import { currentPortalIdentity } from "@/lib/portal-identity";
 
@@ -14,6 +18,9 @@ export const dynamic = "force-dynamic";
 // the session's own Publisher only. The middleware's cookie check is only a fast
 // redirect; this is the check that counts, and it also covers the staging host,
 // where the portal is served without the aff. subdomain.
+//
+// The frame is the Daotra Admin's design language (components/portal), scoped
+// under `.portal-ui` so the marketing site's styles never meet it.
 export default async function PublisherDashboardLayout({ children }: { children: React.ReactNode }) {
   const paths = publisherPortalPaths((await headers()).get("host"));
   const identity = await currentPortalIdentity();
@@ -21,16 +28,19 @@ export default async function PublisherDashboardLayout({ children }: { children:
 
   // Only what exists today. The dashboard, Deal Groups and Postbacks Log
   // screens follow their own specifications.
-  const navItems: DashboardNavItem[] = [{ href: paths.home, label: "Overview", icon: "overview" }];
+  const navigation: PortalNavSection[] = [
+    { title: "Account", areas: [{ href: paths.home, label: "Overview", icon: "overview" }] },
+  ];
 
   return (
-    <DashboardShell
-      roleLabel="Publisher Portal"
-      navItems={navItems}
-      account={{ email: identity.email ?? "", name: identity.publisher_name }}
-      loginHref={paths.login}
-    >
-      {children}
-    </DashboardShell>
+    <div className="portal-ui">
+      <PortalShell
+        navigation={navigation}
+        account={{ email: identity.email ?? "", publisherName: identity.publisher_name }}
+        loginHref={paths.login}
+      >
+        {children}
+      </PortalShell>
+    </div>
   );
 }
