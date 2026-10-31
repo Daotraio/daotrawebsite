@@ -30,6 +30,12 @@ jobs:
 
       - run: npm run lint
 
+      # The unit suite (vitest) pins the security behaviour the deploy steps
+      # below ship: session cookie flags, Verify Password never forwarded, the
+      # same-origin guard, no logging of personal data or request bodies. It
+      # runs before any build or deploy step, so a failing test blocks both.
+      - run: npm test
+
       # Builds the Next.js app and transforms it into a Cloudflare Worker via
       # OpenNext. Runs on every push and pull request; pull requests only
       # build (no deploy token needed) so CI still catches build breaks on
