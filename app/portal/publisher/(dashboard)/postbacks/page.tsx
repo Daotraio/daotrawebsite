@@ -6,9 +6,11 @@ import { Send } from "lucide-react";
 import { Card, DataTable, EmptyState, PageHeader } from "@/components/portal/ui";
 import { PortalSessionEndedError, readDealGroups, readPostbacks } from "@/lib/portal-api";
 import {
+  brandOptions,
   dealOptions,
   EVENT_FILTERS,
   eventLabel,
+  formatMoney,
   formatUtc,
   hasFilters,
   parsePostbackFilters,
@@ -24,10 +26,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// The Publisher's Postbacks Log (Daotra BD-91 D1): only live postbacks Daotra
-// delivered to this Publisher — what the Admin log shows with Publisher Delivery
-// "Successful" — in exactly four columns. The filters are a plain GET form, so the
-// URL is the state; Daotra re-applies the Publisher on every page.
+// The Publisher's Postbacks Log (Daotra BD-91 D1, as amended 2026-11-01): only live
+// postbacks Daotra delivered to this Publisher — what the Admin log shows with Publisher
+// Delivery "Successful". Date, Event, Publisher Click ID and Deal, then the Advertiser
+// (only where brand-visible), the MID and GEO of its own click, and its own accrued
+// commission. The filters are a plain GET form, so the URL is the state; Daotra applies
+// the Publisher and every filter in its own query, on every page.
 
 const COLUMNS = [
   { key: "date", header: "Date", render: (row: PortalPostback) => <span className="num">{formatUtc(row.received_at)}</span> },
@@ -39,6 +43,34 @@ const COLUMNS = [
       row.publisher_click_id ? <span className="mono">{row.publisher_click_id}</span> : <span className="subtle">-</span>,
   },
   { key: "deal", header: "Deal", render: (row: PortalPostback) => row.deal_name },
+  {
+    key: "advertiser",
+    header: "Advertiser",
+    render: (row: PortalPostback) => row.brand ?? <span className="subtle">-</span>,
+  },
+  {
+    key: "mid",
+    header: "MID",
+    render: (row: PortalPostback) => (row.mid ? <span className="mono">{row.mid}</span> : <span className="subtle">-</span>),
+  },
+  {
+    key: "geo",
+    header: "GEO",
+    render: (row: PortalPostback) =>
+      row.country_code ? <span className="mono">{row.country_code}</span> : <span className="subtle">-</span>,
+  },
+  {
+    key: "commission",
+    header: "Commission",
+    align: "right" as const,
+    // The accrued figure Daotra returns, or nothing — never one computed here.
+    render: (row: PortalPostback) =>
+      row.commission !== null ? (
+        <span className="num">{formatMoney(row.commission, row.commission_currency)}</span>
+      ) : (
+        <span className="subtle">-</span>
+      ),
+  },
 ];
 
 export default async function PublisherPostbacksPage({
@@ -58,6 +90,7 @@ export default async function PublisherPostbacksPage({
     throw error;
   }
   const deals = dealOptions(groups);
+  const brands = brandOptions(groups);
   const filtered = hasFilters(filters);
   const { cursor, ...withoutCursor } = filters;
   const older = page.next_cursor ? `${paths.postbacks}${postbackQuery({ ...withoutCursor, cursor: page.next_cursor })}` : null;
@@ -99,6 +132,17 @@ export default async function PublisherPostbacksPage({
             </select>
           </label>
           <label className="filter">
+            <span>Advertiser</span>
+            <select className="select" name="brand" defaultValue={filters.brand ?? ""}>
+              <option value="">All Advertisers</option>
+              {brands.map((b) => (
+                <option key={b} value={b}>
+                  {b}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="filter">
             <span>Country</span>
             <input
               className="input"
@@ -114,6 +158,10 @@ export default async function PublisherPostbacksPage({
           <label className="filter">
             <span>Publisher Click ID</span>
             <input className="input mono" name="publisher_click_id" maxLength={255} defaultValue={filters.publisher_click_id} />
+          </label>
+          <label className="filter">
+            <span>MID</span>
+            <input className="input mono" name="mid" maxLength={255} size={12} defaultValue={filters.mid} />
           </label>
           <div className="filter-actions">
             <button type="submit" className="btn primary sm">

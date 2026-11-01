@@ -119,7 +119,7 @@ export function PublisherRegisterForm({ loginHref }: { loginHref: string }) {
           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
           <span>
             Registration received. If this email address isn&rsquo;t already registered, your Publisher
-            account has been created &mdash;{" "}
+            account has been created &ndash;{" "}
             <a href={loginHref} className="text-accent-silver hover:underline">
               log in
             </a>{" "}

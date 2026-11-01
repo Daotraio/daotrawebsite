@@ -6,8 +6,12 @@
 // money never converted, D2's allocation-only cap, the Admin's chart helpers.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PortalReadError, PortalSessionEndedError, portalRead } from "@/lib/portal-api";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import {
   allocationLabel,
+  brandOptions,
+  findGroup,
   countryLabel,
   dealOptions,
   formatMoney,
@@ -230,5 +234,79 @@ describe("hardening (independent QA)", () => {
     ).rejects.toBeInstanceOf(PortalReadError);
     expect(logged.join(" ")).not.toContain("PUB-SECRET-1");
     expect(logged.join(" ")).toContain("/portal/postbacks");
+  });
+});
+
+describe("Publisher Portal UI improvements (owner, 2026-11-01)", () => {
+  it("money shows at most three decimals, no trailing zeros, half up — display only", () => {
+    expect(formatMoney("150.000000", "USD")).toBe("$150");
+    expect(formatMoney("150.500000", "USD")).toBe("$150.5");
+    expect(formatMoney("150.125000", "USD")).toBe("$150.125");
+    expect(formatMoney("150.1255", "EUR")).toBe("€150.126");
+    expect(formatMoney("150.1254", "EUR")).toBe("€150.125");
+    expect(formatMoney("0.0004", "USD")).toBe("$0");
+  });
+
+  it("the Advertiser and MID filters are parsed, bounded and forwarded by the allowlist", () => {
+    expect(parsePostbackFilters({ brand: " Adv One ", mid: "MB-7", advertiser_id: "x" })).toEqual({
+      brand: "Adv One",
+      mid: "MB-7",
+    });
+    expect(parsePostbackFilters({ brand: "x".repeat(256), mid: "y".repeat(256) })).toEqual({});
+    expect(postbackQuery({ mid: "MB 7", brand: "Adv & Co", event_type: "qftd" })).toBe(
+      "?event_type=qftd&brand=Adv+%26+Co&mid=MB+7",
+    );
+  });
+
+  it("brand options are the visible brands only; a group is found only among the Publisher's own", () => {
+    const deal = (deal_id: string, brand: string | null) => ({
+      deal_id,
+      name: deal_id,
+      status: "active",
+      brand,
+      traffic_source: null,
+      countries: [],
+      terms: null,
+      tracking_path: null,
+      allocation: null,
+    });
+    const groups = [
+      { deal_group_id: "g1", name: "G1", vertical: null, deals: [deal("d1", "Beta"), deal("d2", null)] },
+      { deal_group_id: "g2", name: "G2", vertical: null, deals: [deal("d3", "Alpha"), deal("d1", "Beta")] },
+    ];
+    expect(brandOptions(groups)).toEqual(["Alpha", "Beta"]);
+    expect(findGroup(groups, "g2")?.name).toBe("G2");
+    expect(findGroup(groups, "someone-elses")).toBeNull();
+  });
+
+  it("no UI text uses an em dash or a double-hyphen separator (owner, 2026-11-01)", () => {
+    // Application-generated text uses the en dash (–). Comments may say anything, so they
+    // are stripped first; URLs survive because a line comment needs whitespace before it.
+    const roots = ["app", "components", "lib"];
+    const files: string[] = [];
+    const walk = (dir: string) => {
+      for (const name of readdirSync(dir)) {
+        const path = join(dir, name);
+        if (statSync(path).isDirectory()) walk(path);
+        else if (/\.(ts|tsx)$/.test(name)) files.push(path);
+      }
+    };
+    roots.forEach(walk);
+    const EM_DASH = new RegExp(["\u2014", "&mdash;", "&#8212;", "&#x2014;", "\\\\u2014", " -- "].join("|"), "i");
+    const offenders = files.flatMap((file) =>
+      readFileSync(file, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .split("\n")
+        .map((line) => line.replace(/(^|\s)\/\/.*$/, ""))
+        .filter((line) => EM_DASH.test(line))
+        .map((line) => `${file}: ${line.trim()}`),
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it("the guard itself catches what it must", () => {
+    const EM_DASH = new RegExp(["\u2014", "&mdash;", "&#8212;", "&#x2014;", "\\\\u2014", " -- "].join("|"), "i");
+    for (const bad of ["a — b", "a &mdash; b", "a &#8212; b", "a \\u2014 b", "a -- b"]) expect(EM_DASH.test(bad)).toBe(true);
+    for (const good of ["a – b", "a &ndash; b", "var(--accent)", "a - b", "--flag"]) expect(EM_DASH.test(good)).toBe(false);
   });
 });

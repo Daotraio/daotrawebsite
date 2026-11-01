@@ -16,6 +16,11 @@ export interface PublisherPortalPaths {
   postbacks: string;
 }
 
+/** One Deal Group's page under the Deal Groups list. */
+export function dealGroupPath(paths: PublisherPortalPaths, groupId: string): string {
+  return `${paths.dealGroups}/${encodeURIComponent(groupId)}`;
+}
+
 export function publisherPortalPaths(host: string | null | undefined): PublisherPortalPaths {
   const base = (host ?? "").startsWith("aff.") ? "" : "/portal/publisher";
   return {

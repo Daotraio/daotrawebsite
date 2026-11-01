@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
   if (result.status === 400) {
     return reply(400, {
       error: "link_invalid",
-      message: "This link is not valid. It may have expired or already been used — ask Daotra for a new one.",
+      message: "This link is not valid. It may have expired or already been used – ask Daotra for a new one.",
     });
   }
   if (result.status === 429) {
