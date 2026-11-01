@@ -918,3 +918,11 @@
   .portal-ui .filters .filter .select { width: 100%; }
   .portal-ui .card-head { flex-wrap: wrap; gap: 8px; }
 }
+
+/* Deal Groups as tables (owner, 2026-11-01). A long cell wraps instead of widening the
+   table; the table itself still scrolls inside its card on a narrow screen. */
+.portal-ui table.data td .wrap { display: inline-block; min-width: 160px; max-width: 280px; white-space: normal; overflow-wrap: anywhere; }
+.portal-ui table.data .row-link { font-weight: 560; color: var(--ink); text-decoration: none; }
+.portal-ui table.data .row-link:hover { color: var(--accent); text-decoration: underline; }
+.portal-ui table.data .link-row { min-width: 320px; }
+.portal-ui .table-foot { padding: 0 14px 14px; }

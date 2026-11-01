@@ -115,8 +115,15 @@ export function PortalShell({
   const pathname = usePathname();
   const [navOpen, setNavOpen] = React.useState(false);
 
-  const section = navigation.find((s) => s.areas.some((a) => a.href === pathname));
-  const area = section?.areas.find((a) => a.href === pathname);
+  // An area is current on its own page and on the pages beneath it (a Deal Group under
+  // Deal Groups) — unless it is itself an ancestor of another area, as the portal home
+  // is of every one, which would otherwise be current everywhere.
+  const hrefs = navigation.flatMap((s) => s.areas.map((a) => a.href));
+  const isAncestor = (href: string) => hrefs.some((other) => other !== href && other.startsWith(`${href}/`));
+  const isCurrent = (href: string) =>
+    href === pathname || (!isAncestor(href) && pathname.startsWith(`${href}/`));
+  const section = navigation.find((s) => s.areas.some((a) => isCurrent(a.href)));
+  const area = section?.areas.find((a) => isCurrent(a.href));
 
   return (
     <div className={`shell ${navOpen ? "nav-open" : ""}`}>
@@ -136,8 +143,8 @@ export function PortalShell({
                   <Link
                     key={a.href}
                     href={a.href}
-                    className={`nav-link ${a.href === pathname ? "active" : ""}`}
-                    aria-current={a.href === pathname ? "page" : undefined}
+                    className={`nav-link ${isCurrent(a.href) ? "active" : ""}`}
+                    aria-current={isCurrent(a.href) ? "page" : undefined}
                     onClick={() => setNavOpen(false)}
                   >
                     <Icon size={16} strokeWidth={1.8} />

@@ -99,7 +99,7 @@ export function ResetPasswordForm({ loginHref }: { loginHref: string }) {
         )}
         <p className="text-sm text-muted-foreground">
           This page needs the complete reset link you were given. Reset links are single-use and
-          expire after a short time &mdash; if yours no longer works, ask your Daotra contact for a
+          expire after a short time &ndash; if yours no longer works, ask your Daotra contact for a
           new one.
         </p>
         <a href={loginHref} className="text-sm text-accent-silver hover:underline">

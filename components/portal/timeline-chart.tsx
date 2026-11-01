@@ -152,7 +152,7 @@ export function TimelineCard({ points, bucket }: { points: PortalTimelinePoint[]
   if (points === null)
     body = (
       <div className="chart-empty">
-        <CircleSlash size={14} /> Unavailable — the read took too long
+        <CircleSlash size={14} /> Unavailable – the read took too long
       </div>
     );
   else if (points.every((p) => p.registrations + p.ftds + p.qftds === 0))

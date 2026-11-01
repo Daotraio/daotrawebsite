@@ -87,6 +87,14 @@ export interface PortalPostback {
   event_type: string;
   publisher_click_id: string | null;
   deal_name: string;
+  /** The Advertiser's brand — `null` unless brand-visible to this Publisher (A-1). */
+  brand: string | null;
+  /** The Media Buyer ID this Publisher sent on its own click. */
+  mid: string | null;
+  country_code: string | null;
+  /** This Publisher's accrued commission for the event; `null` where nothing accrued. */
+  commission: string | null;
+  commission_currency: string | null;
 }
 
 export interface PortalPostbackPage {
@@ -124,15 +132,18 @@ export const EVENT_FILTERS = [
 
 /**
  * The only parameters the Postbacks Log ever sends. Traffic Class, Attribution,
- * Publisher, Advertiser and Daotra Click ID are not filters here (BD-91 D1).
+ * Publisher and Daotra Click ID are not filters here (BD-91 D1); the Advertiser (by its
+ * visible brand) and the MID are, since BD-91's amendment of 2026-11-01.
  */
 export interface PostbackFilters {
   received_from?: string;
   received_to?: string;
   event_type?: string;
   deal_id?: string;
+  brand?: string;
   country?: string;
   publisher_click_id?: string;
+  mid?: string;
   cursor?: string;
 }
 
@@ -170,6 +181,10 @@ export function parsePostbackFilters(params: SearchParams): PostbackFilters {
   if (country && COUNTRY.test(country)) filters.country = country.toUpperCase();
   const click = first(params, "publisher_click_id");
   if (click && click.length <= 255) filters.publisher_click_id = click;
+  const brand = first(params, "brand");
+  if (brand && brand.length <= 255) filters.brand = brand;
+  const mid = first(params, "mid");
+  if (mid && mid.length <= 255) filters.mid = mid;
   const cursor = first(params, "cursor");
   if (cursor && CURSOR.test(cursor)) filters.cursor = cursor;
   return filters;
@@ -180,8 +195,10 @@ const FILTER_KEYS: (keyof PostbackFilters)[] = [
   "received_to",
   "event_type",
   "deal_id",
+  "brand",
   "country",
   "publisher_click_id",
+  "mid",
   "cursor",
 ];
 
@@ -348,6 +365,18 @@ export function trackingOrigin(base: string | undefined): string | null {
   } catch {
     return null;
   }
+}
+
+/** The brands this Publisher can see across its groups, once each, for the Advertiser filter. */
+export function brandOptions(groups: PortalDealGroup[]): string[] {
+  const seen = new Set<string>();
+  for (const group of groups) for (const deal of group.deals) if (deal.brand) seen.add(deal.brand);
+  return [...seen].sort((a, b) => a.localeCompare(b));
+}
+
+/** One of this Publisher's own groups, or `null` — absent and not yours look the same. */
+export function findGroup(groups: PortalDealGroup[], id: string): PortalDealGroup | null {
+  return groups.find((group) => group.deal_group_id === id) ?? null;
 }
 
 /** The Publisher's own Deals across its groups, once each, for the Deal filter. */
