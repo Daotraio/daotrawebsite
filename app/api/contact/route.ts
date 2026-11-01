@@ -36,17 +36,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  // NOTE: no email/CRM provider is wired up in this codebase - plug your
-  // provider of choice here (e.g. Resend, SendGrid, or a CRM webhook) using
-  // an API key from process.env. Keeping delivery out of this repo avoids
-  // hardcoding a vendor choice or a secret that isn't actually configured.
-  const { name, email, company, telegram, message } = parsed.data;
-  console.info("[contact] new inquiry", {
-    name,
-    email,
-    company,
-    telegram,
-    messageLength: message.length,
+  // OWNER DECISION PENDING (Daotra audit AUD-27): no delivery channel exists.
+  // Where an inquiry goes (an email provider, a CRM, a Daotra endpoint) is a
+  // business and privacy decision that has not been made, so none is invented
+  // here, and the inquiry is not stored anywhere.
+  //
+  // The sender's personal information — name, email, company, Telegram handle,
+  // message — is NEVER logged: Workers Logs retain console output, with no
+  // stated retention basis for personal data. Only non-identifying facts are.
+  console.warn("[contact] inquiry accepted but not delivered: no delivery channel is configured", {
+    messageLength: parsed.data.message.length,
+    hasCompany: Boolean(parsed.data.company),
   });
 
   return NextResponse.json({ ok: true });
