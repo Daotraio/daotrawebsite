@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Send } from "lucide-react";
-import { Card, DataTable, EmptyState, PageHeader } from "@/components/portal/ui";
+import { Download, Send } from "lucide-react";
+import { Card, DataTable, EmptyState, Notice, PageHeader } from "@/components/portal/ui";
 import { PortalSessionEndedError, readDealGroups, readPostbacks } from "@/lib/portal-api";
 import {
+  EXPORT_ERROR_MESSAGES,
+  EXPORT_FORMATS,
   brandOptions,
+  exportHref,
+  parseExportError,
   dealOptions,
   EVENT_FILTERS,
   eventLabel,
@@ -79,7 +83,10 @@ export default async function PublisherPostbacksPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const paths = publisherPortalPaths((await headers()).get("host"));
-  const filters = parsePostbackFilters(await searchParams);
+  const params = await searchParams;
+  const filters = parsePostbackFilters(params);
+  // Set by the export route when an export did not download, with why (too large / unavailable).
+  const exportError = parseExportError(params.export_error);
 
   let page: PortalPostbackPage;
   let groups: PortalDealGroup[];
@@ -98,7 +105,29 @@ export default async function PublisherPostbacksPage({
 
   return (
     <>
-      <PageHeader title="Postbacks Log" subtitle="Postbacks Daotra delivered to you, newest first. Times are UTC." />
+      <PageHeader
+        title="Postbacks Log"
+        subtitle="Postbacks Daotra delivered to you, newest first. Times are UTC."
+        actions={
+          // BD-91 as amended 2026-11-02: every row the current filters match — not only
+          // this page — as CSV or Excel, produced by Daotra for this Publisher alone.
+          <nav className="export-menu" aria-label="Export">
+            <span className="export-label">
+              <Download size={14} /> Export
+            </span>
+            {EXPORT_FORMATS.map((f) => (
+              // A plain link, never `download`: a file arrives as an attachment and the page
+              // stays; a refused or failed export navigates back here to its notice instead.
+              <a key={f.value} className="btn sm" href={exportHref(filters, f.value)}>
+                {f.label}
+              </a>
+            ))}
+          </nav>
+        }
+      />
+      {exportError ? (
+        <Notice tone={exportError === "too_large" ? "warn" : "bad"}>{EXPORT_ERROR_MESSAGES[exportError]}</Notice>
+      ) : null}
       <Card>
         <form className="filters" method="get" action={paths.postbacks} aria-label="Filters">
           <label className="filter">

@@ -9,10 +9,13 @@ import { PortalReadError, PortalSessionEndedError, portalRead } from "@/lib/port
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import {
-  allocationLabel,
+  capLabel,
+  exportHref,
+  exportQuery,
+  parseExportFormat,
   brandOptions,
   findGroup,
-  countryLabel,
+  geoLabel,
   dealOptions,
   formatMoney,
   formatUtc,
@@ -155,22 +158,38 @@ describe("display", () => {
     expect(roundDecimalString("0.9995", 3)).toBe("1.000");
   });
 
-  it("D2: the allocation alone, or Uncapped", () => {
-    expect(allocationLabel(20)).toBe("Allocation: 20");
-    expect(allocationLabel(0)).toBe("Allocation: 0");
-    expect(allocationLabel(null)).toBe("Uncapped");
+  it("D2 as the Cap column: this Publisher's own allocation as a number, or Uncapped", () => {
+    expect(capLabel(5)).toBe("5");
+    expect(capLabel(0)).toBe("0");
+    expect(capLabel(1200)).toBe("1,200");
+    expect(capLabel(null)).toBe("Uncapped");
   });
 
-  it("countries state their subdivision limits", () => {
-    expect(countryLabel({ country_code: "DE", country_name: "Germany", only_subdivisions: [], excluded_subdivisions: [] })).toBe(
-      "Germany",
-    );
-    expect(countryLabel({ country_code: "US", country_name: null, only_subdivisions: ["NJ"], excluded_subdivisions: [] })).toBe(
-      "US (NJ only)",
+  it("GEOs show as their alpha-2 codes, with any subdivision limit kept", () => {
+    expect(geoLabel({ country_code: "IL", country_name: "Israel", only_subdivisions: [], excluded_subdivisions: [] })).toBe("IL");
+    expect(geoLabel({ country_code: "gb", country_name: "United Kingdom", only_subdivisions: [], excluded_subdivisions: [] })).toBe(
+      "GB",
     );
     expect(
-      countryLabel({ country_code: "CA", country_name: "Canada", only_subdivisions: [], excluded_subdivisions: ["QC"] }),
-    ).toBe("Canada (except QC)");
+      geoLabel({ country_code: "US", country_name: "United States of America", only_subdivisions: ["NJ", "NY"], excluded_subdivisions: [] }),
+    ).toBe("US (NJ, NY only)");
+    expect(geoLabel({ country_code: "CA", country_name: "Canada", only_subdivisions: [], excluded_subdivisions: ["QC"] })).toBe(
+      "CA (except QC)",
+    );
+  });
+
+  it("an export carries the current filters and never the page position", () => {
+    const filters = { event_type: "qftd", mid: "mb2", cursor: "abc", publisher_click_id: "Pub 1" };
+    expect(exportQuery(filters, "csv")).toBe("?export_format=csv&event_type=qftd&publisher_click_id=Pub+1&mid=mb2");
+    expect(exportQuery({}, "xlsx")).toBe("?export_format=xlsx");
+    expect(exportHref(filters, "xlsx")).toBe(
+      "/api/portal/postbacks/export?format=xlsx&event_type=qftd&publisher_click_id=Pub+1&mid=mb2",
+    );
+    expect(exportHref({ cursor: "abc" }, "csv")).toBe("/api/portal/postbacks/export?format=csv");
+    expect(parseExportFormat("csv")).toBe("csv");
+    expect(parseExportFormat("xlsx")).toBe("xlsx");
+    expect(parseExportFormat("pdf")).toBeNull();
+    expect(parseExportFormat(null)).toBeNull();
   });
 
   it("tracking links use a bare https origin, never a guessed one", () => {
