@@ -123,3 +123,67 @@ export function errorCode(body: unknown): string | null {
   }
   return null;
 }
+
+/** A file Daotra returned (the Postbacks Log export), passed through as bytes. */
+export interface DaotraFile {
+  status: number;
+  /** The bytes on 200; empty otherwise (an error body is never needed here). */
+  body: ArrayBuffer;
+  contentType: string | null;
+  contentDisposition: string | null;
+}
+
+/**
+ * The export can take as long as Daotra's own 25-second export budget, so this call waits
+ * longer than an ordinary read; everything else is `callDaotra`'s: the session as a bearer,
+ * the gateway headers, no redirect followed, nothing but the path's name ever logged.
+ */
+const FILE_TIMEOUT_MS = 30_000;
+
+export async function fetchDaotraFile(
+  path: `/${string}`,
+  options: { token: string; clientIp?: string | null },
+): Promise<DaotraFile> {
+  const headers: Record<string, string> = { Accept: "*/*", Authorization: `Bearer ${options.token}` };
+  const secret = process.env.DAOTRA_WEBSITE_GATEWAY_SECRET;
+  if (secret) {
+    headers["X-Daotra-Gateway-Auth"] = secret;
+    if (options.clientIp) headers["X-Daotra-Client-IP"] = options.clientIp;
+  }
+  let response: Response;
+  try {
+    response = await fetch(`${baseUrl()}${path}`, {
+      method: "GET",
+      headers,
+      redirect: "manual",
+      signal: AbortSignal.timeout(FILE_TIMEOUT_MS),
+    });
+  } catch (error) {
+    if (error instanceof DaotraUnavailableError) throw error;
+    console.error("[daotra-api] request failed", { path: loggable(path), kind: (error as Error)?.name });
+    throw new DaotraUnavailableError("Daotra API unreachable");
+  }
+  if (response.status >= 300 && response.status < 400) {
+    console.error("[daotra-api] unexpected redirect", { path: loggable(path), status: response.status });
+    throw new DaotraUnavailableError("Daotra API redirected");
+  }
+  if (response.status >= 500) {
+    console.error("[daotra-api] upstream error", { path: loggable(path), status: response.status });
+  }
+  let body = new ArrayBuffer(0);
+  if (response.status === 200) {
+    try {
+      body = await response.arrayBuffer();
+    } catch (error) {
+      // A body that cannot be read is a temporary failure, never a partial file.
+      console.error("[daotra-api] body read failed", { path: loggable(path), kind: (error as Error)?.name });
+      throw new DaotraUnavailableError("Daotra API body unreadable");
+    }
+  }
+  return {
+    status: response.status,
+    body,
+    contentType: response.headers.get("content-type"),
+    contentDisposition: response.headers.get("content-disposition"),
+  };
+}

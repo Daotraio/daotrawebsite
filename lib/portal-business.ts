@@ -213,6 +213,52 @@ export function postbackQuery(filters: PostbackFilters): string {
   return text ? `?${text}` : "";
 }
 
+export type ExportFormat = "csv" | "xlsx";
+
+export const EXPORT_FORMATS: { value: ExportFormat; label: string }[] = [
+  { value: "csv", label: "CSV" },
+  { value: "xlsx", label: "Excel (.xlsx)" },
+];
+
+/** A requested export format, or null — only the two Daotra produces. */
+export function parseExportFormat(raw: string | null | undefined): ExportFormat | null {
+  return raw === "csv" || raw === "xlsx" ? raw : null;
+}
+
+/**
+ * The export's query (BD-91 as amended 2026-11-02): the format and the log's current
+ * filters from the same allowlist — **never the page position**, so the file holds every
+ * matching row, not the visible page.
+ */
+export function exportQuery(filters: PostbackFilters, format: ExportFormat): string {
+  const query = postbackQuery({ ...filters, cursor: undefined }).replace(/^\?/, "");
+  return `?export_format=${format}${query ? `&${query}` : ""}`;
+}
+
+/** The website's export link for the log's current filters — never its page position. */
+export function exportHref(filters: PostbackFilters, format: ExportFormat): string {
+  const query = postbackQuery({ ...filters, cursor: undefined }).replace(/^\?/, "");
+  return `/api/portal/postbacks/export?format=${format}${query ? `&${query}` : ""}`;
+}
+
+/**
+ * Why an export did not download, as the log tells the Publisher (independent QA, P2): a
+ * refusal Daotra made on purpose (too large, too slow) or a temporary failure (network,
+ * an upstream error, an invalid or unreadable response). Nothing internal is ever shown.
+ */
+export type ExportError = "too_large" | "unavailable";
+
+export function parseExportError(raw: string | string[] | undefined): ExportError | null {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (value === undefined) return null;
+  return value === "too_large" ? "too_large" : "unavailable";
+}
+
+export const EXPORT_ERROR_MESSAGES: Record<ExportError, string> = {
+  too_large: "This export could not be prepared – narrow the filters.",
+  unavailable: "Export temporarily unavailable – please try again.",
+};
+
 /** Whether any filter (not the page position) is applied. */
 export function hasFilters(filters: PostbackFilters): boolean {
   return FILTER_KEYS.some((key) => key !== "cursor" && Boolean(filters[key]));
@@ -329,18 +375,25 @@ const TRAFFIC_SOURCES: Record<string, string> = {
 export const trafficSourceLabel = (value: string | null | undefined): string =>
   value ? (TRAFFIC_SOURCES[value] ?? value) : "-";
 
-/** D2: the Publisher's own allocation only — never usage, never the general cap. */
-export function allocationLabel(allocation: number | null): string {
-  return allocation === null ? "Uncapped" : `Allocation: ${formatCount(allocation)}`;
+/**
+ * D2, presented as the "Cap" column (owner, 2026-11-02): this Publisher's OWN allocation
+ * as the number alone — `5`, `0` — or "Uncapped". Never usage, remaining capacity or the
+ * general cap.
+ */
+export function capLabel(allocation: number | null): string {
+  return allocation === null ? "Uncapped" : formatCount(allocation);
 }
 
-/** `US — NJ, NY only` / `US — except NV` / `Germany`. */
-export function countryLabel(country: PortalCountry): string {
-  const name = country.country_name ?? country.country_code;
-  if (country.only_subdivisions.length) return `${name} (${country.only_subdivisions.join(", ")} only)`;
-  if (country.excluded_subdivisions.length)
-    return `${name} (except ${country.excluded_subdivisions.join(", ")})`;
-  return name;
+/**
+ * A country as its ISO 3166-1 alpha-2 code (owner, 2026-11-02) — the code Daotra's GEO data
+ * carries, never a truncated name — with any US / Canada subdivision limit: `IL`,
+ * `US (NJ only)`, `CA (except QC)`. Display only; the eligibility is Daotra's.
+ */
+export function geoLabel(country: PortalCountry): string {
+  const code = country.country_code.toUpperCase();
+  if (country.only_subdivisions.length) return `${code} (${country.only_subdivisions.join(", ")} only)`;
+  if (country.excluded_subdivisions.length) return `${code} (except ${country.excluded_subdivisions.join(", ")})`;
+  return code;
 }
 
 /**

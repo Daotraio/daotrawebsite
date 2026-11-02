@@ -8,8 +8,8 @@ import { DealPayout } from "@/components/portal/deal-terms";
 import { Badge, Card, DataTable, EmptyState, PageHeader, type Column } from "@/components/portal/ui";
 import { PortalSessionEndedError, readDealGroups } from "@/lib/portal-api";
 import {
-  allocationLabel,
-  countryLabel,
+  capLabel,
+  geoLabel,
   findGroup,
   formatMoney,
   plainLabel,
@@ -55,7 +55,7 @@ function columns(trackingBase: string | undefined): Column<PortalDeal>[] {
       header: "Eligible GEOs",
       render: (deal) =>
         deal.countries.length ? (
-          <span className="wrap">{deal.countries.map(countryLabel).join(", ")}</span>
+          <span className="wrap">{deal.countries.map(geoLabel).join(", ")}</span>
         ) : (
           <span className="subtle">None</span>
         ),
@@ -88,7 +88,8 @@ function columns(trackingBase: string | undefined): Column<PortalDeal>[] {
       header: "Notes",
       render: (deal) => (deal.terms?.notes ? <span className="wrap">{deal.terms.notes}</span> : <span className="subtle">-</span>),
     },
-    { key: "allocation", header: "Allocation", render: (deal) => allocationLabel(deal.allocation) },
+    // D2 as the "Cap" column (owner, 2026-11-02): this Publisher's own allocation, the number alone.
+    { key: "cap", header: "Cap", align: "right", render: (deal) => <span className="num">{capLabel(deal.allocation)}</span> },
     {
       key: "link",
       header: "Tracking link",
